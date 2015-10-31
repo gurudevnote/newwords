@@ -34,5 +34,5 @@ function onClickHandler(info, tab) {
 };
 
 chrome.browserAction.onClicked.addListener(function () {
-  window.open('words.html')
+  window.open('words.html?sorts[date]=-1')
 })

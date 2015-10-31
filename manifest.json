@@ -1,6 +1,6 @@
 {
-  "name": "Right-click menu sample",
-  "description": "sample",
+  "name": "Right-click menu to save selected text to local storage",
+  "description": "save selected text to local storage",
   "version": "0.0.1",
   "permissions": ["contextMenus"],
   "background": {

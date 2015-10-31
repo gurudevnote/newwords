@@ -14,7 +14,7 @@ for(i = 0; i < wordCount; i++) {
   var wordObj = localStorage.getObject(key);
   datas.push({
     text: wordObj.text,
-    date: moment(wordObj.date)
+    date: moment(wordObj.date).format()
   });
   var now = moment();
   datas = _.sortBy(datas, function(item){
@@ -22,7 +22,14 @@ for(i = 0; i < wordCount; i++) {
   })
 }
 
-var dicUrl = "http://www.oxforddictionaries.com/definition/english/";
-_.forEach(datas, function(item, index) {
-  document.writeln(index + ". <a target='_blank' href='" + dicUrl + item.text +"'>" + item.text + "</a>(" + item.date.toISOString() + ")<br/>");
-})
+//var dicUrl = "http://www.oxforddictionaries.com/definition/english/";
+//_.forEach(datas, function(item, index) {
+//  document.writeln(index + ". <a target='_blank' href='" + dicUrl + item.text +"'>" + item.text + "</a>(" + item.date.toISOString() + ")<br/>");
+//})
+$(function(){
+  $('#my-final-table').dynatable({
+    dataset: {
+      records: datas
+    }
+  });
+});

@@ -7,5 +7,10 @@
     "persistent": false,
     "scripts": ["background.js"]
   },
+  "icons": {
+    "16": "icon-bitty.png",
+    "48": "icon-small.png",
+    "128": "icon-large.png"
+  },
   "manifest_version": 2
 }

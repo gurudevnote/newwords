@@ -1,8 +1,8 @@
 {
   "name": "Right-click menu to save selected text to local storage",
   "description": "save selected text to local storage",
-  "version": "0.0.2",
-  "permissions": ["contextMenus", "tabs"],
+  "version": "0.0.1",
+  "permissions": ["contextMenus", "tabs", "storage"],
   "background": {
     "persistent": false,
     "scripts": ["background.js"]
@@ -16,5 +16,9 @@
     "default_icon" : "icon-small.png",
     "default_title" : "see list of selected texts in local storage"
   },
+  "web_accessible_resources":[
+    "lodash.min.js",
+    "moment.js"
+  ],
   "manifest_version": 2
 }

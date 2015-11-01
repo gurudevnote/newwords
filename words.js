@@ -22,14 +22,17 @@ for(i = 0; i < wordCount; i++) {
   })
 }
 
-//var dicUrl = "http://www.oxforddictionaries.com/definition/english/";
-//_.forEach(datas, function(item, index) {
-//  document.writeln(index + ". <a target='_blank' href='" + dicUrl + item.text +"'>" + item.text + "</a>(" + item.date.toISOString() + ")<br/>");
-//})
+var dicUrl = "http://www.oxforddictionaries.com/definition/english/";
 $(function(){
   $('#my-final-table').dynatable({
     dataset: {
       records: datas
-    }
+    },
+    writers: {
+      _rowWriter: function(rowIndex, record, columns, cellWriter) {
+        var textWithLink = "<a target='_blank' href='" + dicUrl + record.text +"'>" + record.text + "</a>";
+        return '<tr><td style="text-align: left;">' + textWithLink + '</td><td style="text-align: left;">' + record.date + '</td></tr>';
+      }
+    },
   });
 });

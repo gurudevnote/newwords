@@ -22,7 +22,8 @@ for(i = 0; i < wordCount; i++) {
   })
 }
 
-var dicUrl = "http://www.oxforddictionaries.com/definition/english/";
+//var dicUrl = "http://www.oxforddictionaries.com/definition/english/";
+var dicUrl = 'http://www.oxforddictionaries.com/search/?multi=1&dictCode=english&q=';
 $(function(){
   $('#my-final-table').dynatable({
     dataset: {

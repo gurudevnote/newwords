@@ -37,6 +37,9 @@ Click the icon on right address bar to view list saved text. In list view you ca
 
 ![idea-markdown](https://raw.githubusercontent.com/nguyenhuuhuy/newwords/master/docs/view-list.png)
 
+List words is stored in local storage. You can sort by text, date, saved count, view count and see web page that contain the word
+
+![idea-markdown](https://raw.githubusercontent.com/nguyenhuuhuy/newwords/master/docs/list-words.png)
 
 Software usages
 ========

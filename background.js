@@ -25,11 +25,22 @@ chrome.contextMenus.onClicked.addListener(onClickHandler);
 
 // The onClicked callback function.
 function onClickHandler(info, tab) {
-  var selectedText = info.selectionText.toLocaleString();
-  localStorage.setObject(selectedText, {
-    "text": selectedText,
-    "date": new Date()
-  });
+  var selectedText = info.selectionText.toLowerCase();
+  var url = tab.url;
+  var wordObj = localStorage.getObject(selectedText);
+  if(wordObj == undefined || wordObj == null) {
+    localStorage.setObject(selectedText, {
+      "text": selectedText,
+      "date": new Date(),
+      "url": url,
+      "viewCount": 0,
+      "savedCount": 1
+    });
+  } else {
+    wordObj.date = new Date();
+    wordObj.savedCount = (wordObj.savedCount==undefined ? 0 : wordObj.savedCount) + 1;
+    localStorage.setObject(selectedText, wordObj);
+  }
   chrome.browserAction.setBadgeText({text: localStorage.length + ''});
 };
 

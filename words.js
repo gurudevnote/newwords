@@ -41,7 +41,7 @@ function updateViewCount(word){
 
 //var dicUrl = "http://www.oxforddictionaries.com/definition/english/";
 var dicUrl = 'http://www.oxforddictionaries.com/search/?multi=1&dictCode=english&q=';
-var googleImages = 'https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=';
+var googleImages = 'https://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&q=';
 var dynamicTable = null;
 $(function(){
   dynamicTable = $('#my-final-table').dynatable({

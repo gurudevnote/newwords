@@ -10,6 +10,8 @@ Clone my source code
 git clone https://github.com/nguyenhuuhuy/newwords.git
 ```
 
+or download zip file of the source code and extract to your folder https://github.com/nguyenhuuhuy/newwords/archive/master.zip
+
 Open new tab on google chrome and enter **chrome://extensions** on address bar.
 
 Make sure **Developer mode** is checked, see below images
@@ -37,9 +39,9 @@ Click the icon on right address bar to view list saved text. In list view you ca
 
 ![idea-markdown](https://raw.githubusercontent.com/nguyenhuuhuy/newwords/master/docs/view-list.png)
 
-List words is stored in local storage. You can sort by text, date, saved count, view count and see web page that contain the word
+List words is stored in local storage. You can sort by text, date, saved count, view count and see web page that contain the word by click to source link. Also you can hover the word to see related images
 
-![idea-markdown](https://raw.githubusercontent.com/nguyenhuuhuy/newwords/master/docs/list-words.png)
+![idea-markdown](https://raw.githubusercontent.com/nguyenhuuhuy/newwords/master/docs/hover-to-show-related-images.png)
 
 Software usages
 ========

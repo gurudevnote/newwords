@@ -90,7 +90,11 @@ $(function(){
       var listImagesContent = _.map(listImages, function(it){
         return '<img src="' + it.tbUrl + '"/>';
       });
-      callback(listImagesContent.join());
+      var listBigImage = _.map(listImages, function(it){
+        return '<img src="' +it.url + '" />';
+      });
+      $('#google-images').html(listBigImage);
+      callback(listImagesContent.join(''));
     });
   }});
 });

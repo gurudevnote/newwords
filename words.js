@@ -9,6 +9,7 @@ Storage.prototype.getObject = function(key) {
 
 var wordCount = localStorage.length;
 var datas = [];
+var events = [];
 for(i = 0; i < wordCount; i++) {
   var key = localStorage.key(i);
   var wordObj = localStorage.getObject(key);
@@ -22,6 +23,10 @@ for(i = 0; i < wordCount; i++) {
   }
 
   datas.push(wordObj);
+  events.push({
+    title: wordObj.text,
+    start: wordObj.date
+  });
 }
 
 var now = moment();
@@ -93,4 +98,16 @@ $(function(){
       callback(listImagesContent.join());
     });
   }});
+
+  $('#calendar').fullCalendar({
+    header: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'month,agendaWeek,agendaDay'
+    },
+    defaultDate: moment().format('YYYY-MM-DD'),
+    editable: false,
+    eventLimit: false, // allow "more" link when too many events
+    events: events
+  });    
 });

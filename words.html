@@ -11,8 +11,17 @@
         <link rel="stylesheet" media="all" href="dynatable-docs.css" />
         <!-- resources for project demos //-->
         <link rel="stylesheet" media="all" href="jquery.dynatable.css" />
-        <link rel="stylesheet" href="jquery-ui.css">
+        <link rel="stylesheet" href="jquery-ui.css" />
+        <script src="fullcalendar/fullcalendar.js" ></script>
+        <link rel="stylesheet" type="text/css" href="fullcalendar/fullcalendar.css" />
         <script src="jquery-ui.js"></script>
+        <style>
+            #calendar {
+                max-width: 900px;
+                margin: 0 auto;
+            }
+        </style>
+
     </head>
     <body>
         <div id="content" class="contained">
@@ -28,6 +37,7 @@
                     <tbody>
                     </tbody>
                 </table>
+                <div id='calendar'></div>
             </div>
         </div>
         <script type="text/javascript" src="words.js"></script>

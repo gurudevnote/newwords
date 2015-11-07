@@ -85,7 +85,11 @@ $(function(){
       return it;
     });
     dynamicTable.process();
-  });  
+  });
+
+  dynamicTable.queries.functions['hideDate'] = function(record, queryValue) {
+      return queryValue == record.hideDate;
+  };
 
   $('#calendar').fullCalendar({
     header: {
@@ -95,11 +99,11 @@ $(function(){
     },
     defaultDate: moment().format('YYYY-MM-DD'),
     editable: false,
-    eventLimit: false, // allow "more" link when too many events
+    eventLimit: true, // allow "more" link when too many events
     events: events,
     dayClick: function(date, jsEvent, view) {
-      // dynamicTable.queries.add("hideDate",date.format('YYYY-MM-DD'));
-      // dynamicTable.process();
+      dynamicTable.queries.add("hideDate",date.format('YYYY-MM-DD'));
+      dynamicTable.process();
     }
   });
 

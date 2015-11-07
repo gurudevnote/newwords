@@ -1,0 +1,9 @@
+.images-tooltip {
+	max-width: 100% !important;
+}
+
+.images-tooltip img{
+	margin-right: 2px;
+	margin-bottom: 2px;
+	border: 1px solid gray;	
+}

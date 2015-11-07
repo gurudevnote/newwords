@@ -81,7 +81,7 @@ $(function(){
     dynamicTable.process();
   });
 
-  $(document).tooltip({items: '[google-image]', content: function(callback){
+  $(document).tooltip({items: '[google-image]', tooltipClass: 'images-tooltip', content: function(callback){
     var text =($(this).text());
     $.getJSON(googleImages + text, function(data){
       var listImages = _.map(data.responseData.results, function(item){

@@ -84,9 +84,21 @@ $(function(){
       return it;
     });
     dynamicTable.process();
+  });  
+
+  $('#calendar').fullCalendar({
+    header: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'month,agendaWeek,agendaDay'
+    },
+    defaultDate: moment().format('YYYY-MM-DD'),
+    editable: false,
+    eventLimit: false, // allow "more" link when too many events
+    events: events
   });
 
-  $(document).tooltip({items: '[google-image]', content: function(callback){
+  $(document).tooltip({items: '[google-image],span.fc-title', content: function(callback){
     var text =($(this).text());
     $.getJSON(googleImages + text, function(data){
       var listImages = _.map(data.responseData.results, function(item){
@@ -99,15 +111,8 @@ $(function(){
     });
   }});
 
-  $('#calendar').fullCalendar({
-    header: {
-      left: 'prev,next today',
-      center: 'title',
-      right: 'month,agendaWeek,agendaDay'
-    },
-    defaultDate: moment().format('YYYY-MM-DD'),
-    editable: false,
-    eventLimit: false, // allow "more" link when too many events
-    events: events
-  });    
+  $('body').on('click', "span.fc-title", function () {
+    var text =($(this).text());
+    window.open(dicUrl + text);
+  });
 });

@@ -9,10 +9,12 @@ Storage.prototype.getObject = function(key) {
 
 var wordCount = localStorage.length;
 var datas = [];
+var events = [];
 for(i = 0; i < wordCount; i++) {
   var key = localStorage.key(i);
   var wordObj = localStorage.getObject(key);
   wordObj.date = moment(wordObj.date).format();
+  wordObj.hideDate = moment(wordObj.date).format('YYYY-MM-DD');
   if(wordObj.viewCount == undefined || wordObj.viewCount == null) {
     wordObj.viewCount = 0;
   }
@@ -22,6 +24,10 @@ for(i = 0; i < wordCount; i++) {
   }
 
   datas.push(wordObj);
+  events.push({
+    title: wordObj.text,
+    start: wordObj.date
+  });
 }
 
 var now = moment();
@@ -79,9 +85,25 @@ $(function(){
       return it;
     });
     dynamicTable.process();
+  });  
+
+  $('#calendar').fullCalendar({
+    header: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'month,agendaWeek,agendaDay'
+    },
+    defaultDate: moment().format('YYYY-MM-DD'),
+    editable: false,
+    eventLimit: false, // allow "more" link when too many events
+    events: events,
+    dayClick: function(date, jsEvent, view) {
+      // dynamicTable.queries.add("hideDate",date.format('YYYY-MM-DD'));
+      // dynamicTable.process();
+    }
   });
 
-  $(document).tooltip({items: '[google-image]', tooltipClass: 'images-tooltip', content: function(callback){
+  $(document).tooltip({items: '[google-image],span.fc-title', tooltipClass: 'images-tooltip', content: function(callback){
     var text =($(this).text());
     $.getJSON(googleImages + text, function(data){
       var listImages = _.map(data.responseData.results, function(item){
@@ -97,4 +119,9 @@ $(function(){
       callback(listImagesContent.join(''));
     });
   }});
+
+  $('body').on('click', "span.fc-title", function () {
+    var text =($(this).text());
+    window.open(dicUrl + text);
+  });
 });

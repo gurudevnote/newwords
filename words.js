@@ -49,6 +49,7 @@ function updateViewCount(word){
 var dicUrl = 'http://www.oxforddictionaries.com/search/?multi=1&dictCode=english&q=';
 var googleImages = 'https://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&q=';
 var dynamicTable = null;
+$.ajaxSetup({ cache: true });
 $(function(){
   dynamicTable = $('#my-final-table').dynatable({
     dataset: {
@@ -108,21 +109,22 @@ $(function(){
   });
 
   $(document).tooltip({items: '[google-image],span.fc-title', tooltipClass: 'images-tooltip', content: function(callback){
-    var text =($(this).text());
-    $.getJSON(googleImages + text, function(data){
-      var listImages = _.map(data.responseData.results, function(item){
-        return {tbUrl: item.tbUrl, tbHeight: item.tbHeight, tbWidth: item.tbWidth, url: item.url, width: item.width, height: item.height}
+      var text =($(this).text());
+      $.getJSON(googleImages + text, function(data){
+        var listImages = _.map(data.responseData.results, function(item){
+          return {tbUrl: item.tbUrl, tbHeight: item.tbHeight, tbWidth: item.tbWidth, url: item.url, width: item.width, height: item.height}
+        });
+        var listImagesContent = _.map(listImages, function(it){
+          return '<img src="' + it.url + '"/>';
+        });
+        var listBigImage = _.map(listImages, function(it){
+          return '<img src="' +it.url + '" />';
+        });
+        $('#google-images').html(listBigImage);
+        callback(listImagesContent.join(''));
       });
-      var listImagesContent = _.map(listImages, function(it){
-        return '<img src="' + it.tbUrl + '"/>';
-      });
-      var listBigImage = _.map(listImages, function(it){
-        return '<img src="' +it.url + '" />';
-      });
-      $('#google-images').html(listBigImage);
-      callback(listImagesContent.join(''));
-    });
-  }});
+    },
+  });
 
   $('body').on('click', "span.fc-title", function () {
     var text =($(this).text());

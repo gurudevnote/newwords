@@ -115,7 +115,7 @@ $(function(){
           return {tbUrl: item.tbUrl, tbHeight: item.tbHeight, tbWidth: item.tbWidth, url: item.url, width: item.width, height: item.height}
         });
         var listImagesContent = _.map(listImages, function(it){
-          return '<img src="' + it.url + '"/>';
+        return '<img src="' + it.url + '"/>';
         });
         var listBigImage = _.map(listImages, function(it){
           return '<img src="' +it.url + '" />';

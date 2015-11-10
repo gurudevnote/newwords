@@ -121,7 +121,7 @@ $(function(){
           return '<img src="' +it.url + '" />';
         });
         $('#google-images').html(listBigImage);
-        callback(listImagesContent.join(''));
+        callback(listImagesContent.join(' '));
       });
     },
   });

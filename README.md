@@ -1,6 +1,7 @@
 Introduction
 =============
 New words is chrome extension for storing new words in local storage of your browser. After that you can retrieve the words, view it on a online dictionary.
+
 Install
 =============
 
@@ -35,7 +36,7 @@ Select a text in web page and right click mouse button, in context menu select *
 ![idea-markdown](https://raw.githubusercontent.com/nguyenhuuhuy/newwords/master/docs/save-selected-text.png)
 
 ## view list saved text
-Click the icon on right address bar to view list saved text. In list view you can filter by word, sort by word, or by data or click to word for viewing detail the word on a online dictionary
+Click the icon on right address bar to view list saved text. In list view you can filter by word, sort by word, or by data, hover to a word to see list of related images or click to word for viewing detail the word on a online dictionary
 
 ![idea-markdown](https://raw.githubusercontent.com/nguyenhuuhuy/newwords/master/docs/view-list.png)
 
@@ -43,6 +44,12 @@ List words is stored in local storage. You can sort by text, date, saved count, 
 
 ![idea-markdown](https://raw.githubusercontent.com/nguyenhuuhuy/newwords/master/docs/hover-to-show-related-images.png)
 
+You can see list words in calendar view. If you click to a day on calender the table view will filter word by date value of clicked day.
+
+![idea-markdown](https://raw.githubusercontent.com/nguyenhuuhuy/newwords/master/docs/calender-view.png)
+
 Software usages
 ========
+
 https://github.com/alfajango/jquery-dynatable
+https://github.com/fullcalendar/fullcalendar

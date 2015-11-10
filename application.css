@@ -21,3 +21,7 @@ th a {
 #tableView, #calendar, #google-images {
   margin: 20px;
 }
+
+span.fc-title {
+  cursor: pointer;
+}

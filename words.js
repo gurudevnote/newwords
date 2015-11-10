@@ -45,8 +45,8 @@ function updateViewCount(word){
   return wordObj.viewCount;
 }
 
-//var dicUrl = "http://www.oxforddictionaries.com/definition/english/";
-var dicUrl = 'http://www.oxforddictionaries.com/search/?multi=1&dictCode=english&q=';
+var dicUrl = "http://www.oxforddictionaries.com/definition/english/";
+var dicUrlResult = 'http://www.oxforddictionaries.com/search/?multi=1&dictCode=english&q=';
 var googleImages = 'https://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&q=';
 var dynamicTable = null;
 $.ajaxSetup({ cache: true });
@@ -70,7 +70,7 @@ $(function(){
         if(record.viewCount) {
           viewCount = '<td id="viewCount_' + id + '">' + record.viewCount + '</td>';
         }
-        var textWithLink = "<a google-image='' target='_blank' id='text_" + id + "' href='" + dicUrl + record.text +"'>" + record.text + "</a>";
+        var textWithLink = "<a google-image='' target='_blank' id='text_" + id + "' href='" + dicUrlResult + record.text +"'>" + record.text + "</a> <span id='phonetic_" + id + "'></span>";
         return '<tr><td style="text-align: left;">' + textWithLink + '</td><td style="text-align: left;">' + record.date + '</td>' + savedCount + viewCount + source + '</tr>';
       }
     },
@@ -128,6 +128,37 @@ $(function(){
 
   $('body').on('click', "span.fc-title", function () {
     var text =($(this).text());
-    window.open(dicUrl + text);
+    window.open(dicUrlResult + text);
+  });
+
+  $('body').on('mouseover', "span.fc-title, a[id^=text_]", function () {
+    var text = $(this).text();
+    var id = text.replace(/\s+/g, '_');
+    $.get(dicUrlResult + text, function(dicResult){
+      var url = $(dicResult).find('#searchPageResults a:eq(0)').attr('href');
+      var mp3 = $(dicResult).find('.audio_play_button:eq(0)').attr('data-src-mp3');
+      if(mp3 != undefined){
+        var dicResultDom = $(dicResult);
+        var phonetic = dicResultDom.find('.headpron:eq(0)').text();
+        var title = dicResultDom.find('.pageTitle').text();
+        phonetic = phonetic.replace('Pronunciation:', title);
+        $('#phonetic_'+id).text(phonetic);
+        var audio = new Audio();
+        audio.src = mp3;
+        audio.play();
+      } else {
+        $.get(url, function (dicData) {
+          var dicDataDom = $(dicData);
+          var mp3 = dicDataDom.find('.audio_play_button:eq(0)').attr('data-src-mp3');
+          var title = dicDataDom.find('.pageTitle').text();
+          var phonetic = dicDataDom.find('.headpron:eq(0)').text();
+          phonetic = phonetic.replace('Pronunciation:', title);
+          $('#phonetic_'+id).text(phonetic);
+          var audio = new Audio();
+          audio.src = mp3;
+          audio.play();
+        });
+      }
+    });
   });
 });

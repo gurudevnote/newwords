@@ -70,7 +70,10 @@ $(function(){
         if(record.viewCount) {
           viewCount = '<td id="viewCount_' + id + '">' + record.viewCount + '</td>';
         }
-        var textWithLink = "<a google-image='' target='_blank' id='text_" + id + "' href='" + dicUrlResult + record.text +"'>" + record.text + "</a> <span id='phonetic_" + id + "'></span>";
+        var textWithLink = "<a google-image='' target='_blank' id='text_" + id
+          + "' href='" + dicUrlResult + record.text +"'>" + record.text
+          + "</a> <span id='phonetic_" + id + "'></span>"
+          + "<br/> <span id='meaning_" + id + "'></span>";
         return '<tr><td style="text-align: left;">' + textWithLink + '</td><td style="text-align: left;">' + record.date + '</td>' + savedCount + viewCount + source + '</tr>';
       }
     },
@@ -142,7 +145,9 @@ $(function(){
         var phonetic = dicResultDom.find('.headpron:eq(0)').text();
         var title = dicResultDom.find('.pageTitle').text();
         phonetic = phonetic.replace('Pronunciation:', title);
+        var meaning = dicResultDom.find('.definition:eq(0)').text();
         $('#phonetic_'+id).text(phonetic);
+        $('#meaning_' + id).text(meaning);
         var audio = new Audio();
         audio.src = mp3;
         audio.play();
@@ -153,7 +158,9 @@ $(function(){
           var title = dicDataDom.find('.pageTitle').text();
           var phonetic = dicDataDom.find('.headpron:eq(0)').text();
           phonetic = phonetic.replace('Pronunciation:', title);
+          var meaning = dicDataDom.find('.definition:eq(0)').text();
           $('#phonetic_'+id).text(phonetic);
+          $('#meaning_' + id).text(meaning);
           var audio = new Audio();
           audio.src = mp3;
           audio.play();

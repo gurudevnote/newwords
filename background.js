@@ -45,5 +45,13 @@ function onClickHandler(info, tab) {
 };
 
 chrome.browserAction.onClicked.addListener(function () {
-  window.open('words.html?sorts[date]=-1')
-})
+  //close all extension tabs
+  var appId = chrome.runtime.id;
+  var appUrl = 'chrome-extension://'+appId+'/*';
+  chrome.tabs.query({"url": appUrl}, function(tabs){
+    for(i = 0; i < tabs.length ;i++){
+      chrome.tabs.remove(tabs[i].id);
+    }
+  });
+  window.open('words.html?sorts[date]=-1');
+});

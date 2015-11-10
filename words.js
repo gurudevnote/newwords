@@ -49,6 +49,12 @@ var dicUrl = "http://www.oxforddictionaries.com/definition/english/";
 var dicUrlResult = 'http://www.oxforddictionaries.com/search/?multi=1&dictCode=english&q=';
 var googleImages = 'https://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&q=';
 var dynamicTable = null;
+var audios = [];
+function stopAudios(){
+  _.map(audios, function(audio){
+    audio.pause();
+  });
+}
 $.ajaxSetup({ cache: true });
 $(function(){
   dynamicTable = $('#my-final-table').dynatable({
@@ -72,7 +78,7 @@ $(function(){
         }
         var textWithLink = "<a google-image='' target='_blank' id='text_" + id
           + "' href='" + dicUrlResult + record.text +"'>" + record.text
-          + "</a> <span id='phonetic_" + id + "'></span>"
+          + "</a> <span class='correctedWord' id='phonetic_" + id + "'></span>"
           + "<br/> <span id='meaning_" + id + "'></span>";
         return '<tr><td style="text-align: left;">' + textWithLink + '</td><td style="text-align: left;">' + record.date + '</td>' + savedCount + viewCount + source + '</tr>';
       }
@@ -150,7 +156,9 @@ $(function(){
         $('#meaning_' + id).text(meaning);
         var audio = new Audio();
         audio.src = mp3;
+        stopAudios();
         audio.play();
+        audios.push(audio);
       } else {
         $.get(url, function (dicData) {
           var dicDataDom = $(dicData);
@@ -163,7 +171,9 @@ $(function(){
           $('#meaning_' + id).text(meaning);
           var audio = new Audio();
           audio.src = mp3;
+          stopAudios();
           audio.play();
+          audios.push(audio);
         });
       }
     });

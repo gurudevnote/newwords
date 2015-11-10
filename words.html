@@ -12,24 +12,34 @@
         <!-- resources for project demos //-->
         <link rel="stylesheet" media="all" href="jquery.dynatable.css" />
         <link rel="stylesheet" href="jquery-ui.css">
+        <link rel="stylesheet" href="images-tooltip.css">
+        <script src="fullcalendar/fullcalendar.js" ></script>
+        <link rel="stylesheet" type="text/css" href="fullcalendar/fullcalendar.css" />
         <script src="jquery-ui.js"></script>
+        <style>
+            #calendar {
+                max-width: 900px;
+                margin: 0 auto;
+            }
+        </style>
+
     </head>
     <body>
-        <div id="content" class="contained">
-            <div id="post">
-                <table id="my-final-table" class="table table-bordered">
-                    <thead>
-                        <th>text</th>
-                        <th>date</th>
-                        <th>saved count</th>
-                        <th>view count</th>
-                        <th>source</th>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
+        <div id='tableView'>
+            <table id="my-final-table" class="table table-bordered">
+                <thead>
+                    <th>text</th>
+                    <th>date</th>
+                    <th>saved count</th>
+                    <th>view count</th>
+                    <th>source</th>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
         </div>
+        <div id='calendar'></div>
+        <div id="google-images"></div>
         <script type="text/javascript" src="words.js"></script>
     </body>
 </html>

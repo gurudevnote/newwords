@@ -1,6 +1,6 @@
 Introduction
 =============
-New words is chrome extension for storing new words in local storage of your browser. After that you can retrieve the words, view it on a online dictionary.
+NewWords is a chrome extension to store new words in your browser's local storage. After that you can retrieve the words, view it on any online dictionary.
 
 Install
 =============
@@ -52,4 +52,5 @@ Software usages
 ========
 
 https://github.com/alfajango/jquery-dynatable
+
 https://github.com/fullcalendar/fullcalendar

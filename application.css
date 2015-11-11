@@ -25,3 +25,7 @@ th a {
 span.fc-title {
   cursor: pointer;
 }
+
+.correctedWord{
+  font-weight: bold;
+}

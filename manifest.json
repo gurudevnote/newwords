@@ -16,5 +16,6 @@
     "default_icon" : "icon-small.png",
     "default_title" : "see list of selected texts in local storage"
   },
+  "options_page": "options.html",
   "manifest_version": 2
 }

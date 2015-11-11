@@ -58,6 +58,7 @@ $(function(){
         var source = '<td>&nbsp;</td>';
         var savedCount = '<td>&nbsp;</td>';
         var viewCount = '<td id="viewCount_' + id + '">&nbsp;</td>';
+        var action = '<td><a class="action" word="'+ record.text +'" href="#">delete</a></td>';
         if(record.url) {
           source = '<td><a target="_blank" href="' + record.url +'">source</a></td>';
         }
@@ -71,7 +72,7 @@ $(function(){
           + "' href='" + dicUrlResult + record.text +"'>" + record.text
           + "</a> <span class='correctedWord' id='phonetic_" + id + "'></span>"
           + "<br/> <span id='meaning_" + id + "'></span>";
-        return '<tr><td style="text-align: left;">' + textWithLink + '</td><td style="text-align: left;">' + record.date + '</td>' + savedCount + viewCount + source + '</tr>';
+        return '<tr><td style="text-align: left;">' + textWithLink + '</td><td style="text-align: left;">' + record.date + '</td>' + savedCount + viewCount + source + action + '</tr>';
       }
     },
   }).data('dynatable');
@@ -129,6 +130,14 @@ $(function(){
   $('body').on('click', "span.fc-title", function () {
     var text =($(this).text());
     window.open(dicUrlResult + text);
+  });
+
+  $('body').on('click', "a.action", function () {
+    var text =$(this).attr('word');
+    if(confirm('Are you sure to remove the word: ' + text)){
+      localStorage.removeItem(text);
+      window.location.reload();
+    }
   });
 
   $('body').on('mouseover', "span.fc-title, a[id^=text_]", function () {

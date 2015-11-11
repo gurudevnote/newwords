@@ -1,5 +1,12 @@
 Storage.prototype.setObject = function(key, value) {
   this.setItem(key, JSON.stringify(value));
+  try
+  {
+  	var wordObj = {};
+  	wordObj[key] = JSON.stringify(value);
+  	chrome.storage.sync.set(wordObj);
+  }
+  catch(err){}
 }
 
 Storage.prototype.getObject = function(key) {

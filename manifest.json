@@ -5,7 +5,7 @@
   "permissions": ["contextMenus", "tabs", "storage", "*://*/*"],
   "background": {
     "persistent": false,
-    "scripts": ["background.js"]
+    "page": "background.html"
   },
   "icons": {
     "16": "icon-bitty.png",

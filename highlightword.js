@@ -3,6 +3,7 @@ var highlightWordRegexp = /__highlightword=([^\?#&\\\/]*)/g;
 var match = highlightWordRegexp.exec(url);
 //console.dir(match);
 var word = match[1];
+var achorIndex = 1;
 if(word != undefined || word != null || word != '') {
 	//highlight the word
 	//alert(word);
@@ -13,12 +14,12 @@ if(word != undefined || word != null || word != '') {
 //source code from website: http://www.nsftools.com/misc/SearchAndHighlight.htm
 
 function doHighlight(bodyText, searchTerm, highlightStartTag, highlightEndTag) 
-{
+{  
   // the highlightStartTag and highlightEndTag parameters are optional
   if ((!highlightStartTag) || (!highlightEndTag)) {
-    highlightStartTag = "<font style='color:blue; background-color:yellow; font-size: 20px; font-weight:bold;'>";
+    highlightStartTag = "<font style='color:blue; background-color:yellow; font-size: 40px; font-weight:bold;'>";
     highlightEndTag = "</font>";
-  }
+  }  
   
   // find all occurences of the search term in the given text,
   // and add some "highlight" tags to them (we're not using a
@@ -40,10 +41,12 @@ function doHighlight(bodyText, searchTerm, highlightStartTag, highlightEndTag)
       if (bodyText.lastIndexOf(">", i) >= bodyText.lastIndexOf("<", i)) {
         // skip anything inside a <script> block
         if (lcBodyText.lastIndexOf("/script>", i) >= lcBodyText.lastIndexOf("<script", i)) {
-          newText += bodyText.substring(0, i) + highlightStartTag + bodyText.substr(i, searchTerm.length) + highlightEndTag;
+          var highlightStartTagWithAchor = "<a id='achorIndex" + achorIndex + "'><a>" + highlightStartTag;	
+          newText += bodyText.substring(0, i) + highlightStartTagWithAchor + bodyText.substr(i, searchTerm.length) + highlightEndTag;
           bodyText = bodyText.substr(i + searchTerm.length);
           lcBodyText = bodyText.toLowerCase();
           i = -1;
+          achorIndex++;
         }
       }
     }
@@ -85,5 +88,7 @@ function highlightSearchTerms(searchText, treatAsPhrase, warnOnFailure, highligh
   }
   
   document.body.innerHTML = bodyText;
+
+  window.location.href = "#achorIndex1";
   return true;
 }

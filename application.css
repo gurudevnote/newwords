@@ -29,3 +29,7 @@ span.fc-title {
 .correctedWord{
   font-weight: bold;
 }
+
+#my-final-table tr:hover {
+  background-color: #F1F1F1;
+}

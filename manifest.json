@@ -17,5 +17,12 @@
     "default_title" : "see list of selected texts in local storage"
   },
   "options_page": "options.html",
-  "manifest_version": 2
+  "manifest_version": 2,
+  "content_scripts": [
+    {
+      //"matches": ["*://*/*__highlightword=*"],
+      "matches": ["*://*/*"],
+      "js": ["highlightword.js"]
+    }
+  ]
 }

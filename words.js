@@ -60,7 +60,7 @@ $(function(){
         var viewCount = '<td id="viewCount_' + id + '">&nbsp;</td>';
         var action = '<td><a class="action" word="'+ record.text +'" href="#">delete</a></td>';
         if(record.url) {
-          source = '<td><a target="_blank" href="' + record.url +'">source</a></td>';
+          source = '<td><a target="_blank" href="' + record.url + '#__highlightword=' + record.text +'">source</a></td>';
         }
         if(record.savedCount) {
           savedCount = '<td>' + record.savedCount + '</td>';

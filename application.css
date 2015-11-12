@@ -18,7 +18,7 @@ th a {
   font-size: 0.9em;
 }
 
-#tableView, #calendar, #google-images {
+#tableView, #calendar, #google-images, #addArea {
   margin: 20px;
 }
 
@@ -28,4 +28,16 @@ span.fc-title {
 
 .correctedWord{
   font-weight: bold;
+}
+
+#my-final-table tr:hover {
+  background-color: #F1F1F1;
+}
+
+div#add{
+  display: none;
+}
+
+textarea#inputeText{
+  width: 90%;
 }

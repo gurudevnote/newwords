@@ -1,12 +1,3 @@
-Storage.prototype.setObject = function(key, value) {
-  this.setItem(key, JSON.stringify(value));
-}
-
-Storage.prototype.getObject = function(key) {
-  var value = this.getItem(key);
-  return value && JSON.parse(value);
-}
-
 // Set up context menu at install time.
 chrome.runtime.onInstalled.addListener(function() {
   var context = "selection";

@@ -8,8 +8,33 @@ if(word != undefined || word != null || word != '') {
 	//highlight the word
 	//alert(word);
 	highlightSearchTerms(word);
-}
 
+	//create nex button
+	document.body.innerHTML += '<div style="position:fixed;top:5px;left:5px;background:red;z-index:99999;">'+
+	'<button onclick="nextAchor()">next</button></div>';	
+
+	var actualCode = [
+		"var currentAchorIndex = 1;",
+		"var achorIndex = " + achorIndex + ";",
+		"function nextAchor() {",
+			"if(currentAchorIndex <= achorIndex) {",
+				"currentAchorIndex++;",
+			"}",
+
+			"if(currentAchorIndex > achorIndex) {",
+				"currentAchorIndex = 1;",
+			"}",
+
+			"window.location.href='#achorIndex' + currentAchorIndex;",
+		"}",
+
+	].join('\n');
+
+	var script = document.createElement('script');
+	script.textContent = actualCode;
+	(document.head||document.documentElement).appendChild(script);
+	script.parentNode.removeChild(script);
+}
 
 //source code from website: http://www.nsftools.com/misc/SearchAndHighlight.htm
 

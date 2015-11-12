@@ -11,7 +11,7 @@ if(word != undefined || word != null || word != '') {
 
 	//create nex button
 	document.body.innerHTML += '<div style="position:fixed;top:5px;left:5px;background:red;z-index:99999;">'+
-	'<button onclick="nextAchor()">next</button></div>';	
+	'Total match: ' + (achorIndex - 1) + '<button onclick="nextAchor()">next</button></div>';	
 
 	var actualCode = [
 		"var currentAchorIndex = 1;",
@@ -66,7 +66,7 @@ function doHighlight(bodyText, searchTerm, highlightStartTag, highlightEndTag)
       if (bodyText.lastIndexOf(">", i) >= bodyText.lastIndexOf("<", i)) {
         // skip anything inside a <script> block
         if (lcBodyText.lastIndexOf("/script>", i) >= lcBodyText.lastIndexOf("<script", i)) {
-          var highlightStartTagWithAchor = "<a id='achorIndex" + achorIndex + "'><a>" + highlightStartTag;	
+          var highlightStartTagWithAchor = "<a id='achorIndex" + achorIndex + "'></a>" + highlightStartTag;	
           newText += bodyText.substring(0, i) + highlightStartTagWithAchor + bodyText.substr(i, searchTerm.length) + highlightEndTag;
           bodyText = bodyText.substr(i + searchTerm.length);
           lcBodyText = bodyText.toLowerCase();

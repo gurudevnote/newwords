@@ -48,6 +48,63 @@ function stopAudios(){
 }
 $.ajaxSetup({ cache: true });
 $(function(){
+  $('button#showAddForm').click(function(){
+    $(this).hide();
+    $('div#add').show();
+    $('#tableView, #calendar, #google-images').hide();
+  });
+
+  $('button#saveWords').click(function(){
+    $('div#add').hide();
+    $('button#showAddForm').show();
+    $('#tableView, #calendar, #google-images').show();
+    var listWords = $('#inputeText').val().toLowerCase().split(/[\n\r,;]+/i);
+    //console.dir(listWords);
+    //console.log($('#inputeText').val().toLowerCase());
+    listWords = _.map(listWords, function(it){
+      return it.trim();
+    });
+    listWords = _.uniq(listWords);
+    listWords = _.filter(listWords, function(word){
+      return word != undefined && word != null && word != '';
+    });
+
+    //console.dir(listWords);
+    //add list word to storage
+    var listWordsSyn = {};
+    _.map(listWords, function(word){
+      var selectedText = word.toLowerCase();
+      var url = '';
+      var wordObj = localStorage.getObject(selectedText);
+      if(wordObj == undefined || wordObj == null) {
+        localStorage.setObject(selectedText, {
+          "text": selectedText,
+          "date": new Date(),
+          "url": url,
+          "viewCount": 0,
+          "savedCount": 1
+        });
+      } else {
+        wordObj.date = new Date();
+        wordObj.savedCount = (wordObj.savedCount==undefined ? 0 : wordObj.savedCount) + 1;
+        localStorage.setObject(selectedText, wordObj);
+      }
+      listWordsSyn[selectedText] = localStorage.getItem(selectedText);
+    });
+
+    //synch to chrome storage
+    try
+    {
+      chrome.storage.sync.set(listWordsSyn, function(){
+      });
+    }
+    catch(err) {
+
+    }
+  });
+
+
+
   dynamicTable = $('#my-final-table').dynatable({
     dataset: {
       records: datas

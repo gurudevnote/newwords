@@ -255,4 +255,25 @@ $(function(){
       dicUrlResult = 'http://www.oxforddictionaries.com/search/?multi=1&dictCode=american_english&q=';
     }
   });
+
+  var hideTimeout = null;
+  $(document).keydown(function(event){
+    if(event.which=="17") {
+      $('#isUKDic').trigger('click');
+    }
+
+    var message = '';
+    if($('#isUKDic').is(':checked')){
+      message += "English UK";
+    } else {
+      message += "English US";
+    }
+    $('#notice').html(message);
+    $('#notice').show();
+    clearTimeout(hideTimeout);
+    hideTimeout = setTimeout(function(){
+      $('#notice').hide();
+    }, 1500);
+  });
+
 });

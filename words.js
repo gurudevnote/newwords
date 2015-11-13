@@ -177,23 +177,31 @@ $(function(){
     }
   });
 
-  $(document).tooltip({items: '[google-image],span.fc-title', tooltipClass: 'images-tooltip', content: function(callback){
-      var text =($(this).text());
-      $.getJSON(googleImages + text, function(data){
-        var listImages = _.map(data.responseData.results, function(item){
-          return {tbUrl: item.tbUrl, tbHeight: item.tbHeight, tbWidth: item.tbWidth, url: item.url, width: item.width, height: item.height}
+  $(document).tooltip({
+      items: '[google-image],span.fc-title',
+      tooltipClass: 'images-tooltip',
+      content: function(callback){
+        var text =($(this).text());
+        $.getJSON(googleImages + text, function(data){
+          var listImages = _.map(data.responseData.results, function(item){
+            return {tbUrl: item.tbUrl, tbHeight: item.tbHeight, tbWidth: item.tbWidth, url: item.url, width: item.width, height: item.height}
+          });
+          var listImagesContent = _.map(listImages, function(it){
+          return '<img src="' + it.url + '"/>';
+          });
+          var listBigImage = _.map(listImages, function(it){
+            return '<img src="' +it.url + '" />';
+          });
+          $('#google-images').html(listBigImage);
+          callback(listImagesContent.join(' '));
         });
-        var listImagesContent = _.map(listImages, function(it){
-        return '<img src="' + it.url + '"/>';
-        });
-        var listBigImage = _.map(listImages, function(it){
-          return '<img src="' +it.url + '" />';
-        });
-        $('#google-images').html(listBigImage);
-        callback(listImagesContent.join(' '));
-      });
-    },
-  });
+      },
+      position: {
+        my: "left top+15",
+        at: "left bottom+15",
+        collision: "flipfit flip"
+      },
+    });
 
   $('body').on('click', "span.fc-title", function () {
     var text =($(this).text());

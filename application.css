@@ -41,3 +41,14 @@ div#add{
 textarea#inputeText{
   width: 90%;
 }
+
+div#notice{
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  background-color: lightyellow;
+  font-size: 50px;
+  font-weight: bold;
+  line-height: 100%;
+}

@@ -235,4 +235,13 @@ $(function(){
       }
     });
   });
+  $('#isUKDic').click(function(){    
+    if($(this).is(':checked')){
+      dicUrl = "http://www.oxforddictionaries.com/definition/english/";
+      dicUrlResult = 'http://www.oxforddictionaries.com/search/?multi=1&dictCode=english&q=';
+    } else {
+      dicUrl = "http://www.oxforddictionaries.com/definition/american_english/";
+      dicUrlResult = 'http://www.oxforddictionaries.com/search/?multi=1&dictCode=american_english&q=';
+    }
+  });
 });

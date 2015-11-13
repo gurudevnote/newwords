@@ -51,12 +51,21 @@ $(function(){
   $('button#showAddForm').click(function(){
     $(this).hide();
     $('div#add').show();
+    $('div#dicOptoin').hide();
     $('#tableView, #calendar, #google-images').hide();
+  });
+
+  $('button#cancelWords').click(function(){
+    $('div#add').hide();
+    $('div#dicOptoin').show();
+    $('button#showAddForm').show();
+    $('#tableView, #calendar, #google-images').show();
   });
 
   $('button#saveWords').click(function(){
     $('div#add').hide();
     $('button#showAddForm').show();
+    $('div#dicOptoin').show();
     $('#tableView, #calendar, #google-images').show();
     var listWords = $('#inputeText').val().toLowerCase().split(/[\n\r,;]+/i);
     //console.dir(listWords);
@@ -101,6 +110,8 @@ $(function(){
     catch(err) {
 
     }
+
+    window.location.reload();
   });
 
 

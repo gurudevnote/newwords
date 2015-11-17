@@ -269,7 +269,7 @@ function makeSoundAndMeaning(id, dicData){
   var phonetic = dicDataDom.find('.headpron:eq(0)').text();
   phonetic = phonetic.replace('Pronunciation:', title);
   var meaning = dicDataDom.find('.definition:eq(0)').text();
-  var partOfSpeech = _.map(dicDataDom.find('.partOfSpeech'), function(partOfSpeech){
+  var partOfSpeech = _.map(dicDataDom.find('.partOfSpeechTitle > .partOfSpeech'), function(partOfSpeech){
     return $(partOfSpeech).text();
   });
   partOfSpeech =  '(' + _.uniq(partOfSpeech).join(', ') + ')';

@@ -2,9 +2,12 @@ var url = window.location.href;
 var highlightWordRegexp = /__highlightword=([^\?#&\\\/]*)/g;
 var match = highlightWordRegexp.exec(url);
 //console.dir(match);
-var word = match[1];
+var word = null;
+if(match != null && match[1] != undefined) {
+  word = match[1];
+}
 var achorIndex = 1;
-if(word != undefined || word != null || word != '') {
+if(word != undefined && word != null && word != '') {
 	//highlight the word
 	//alert(word);
 	highlightSearchTerms(word);

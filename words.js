@@ -138,7 +138,7 @@ $(function(){
         }
         var textWithLink = "<a google-image='' target='_blank' id='text_" + id
           + "' href='" + dicUrlResult + record.text +"'>" + record.text
-          + "</a> <span class='correctedWord' id='phonetic_" + id + "'></span>"
+          + "</a> <span class='correctedWord' id='phonetic_" + id + "'></span><span id='wordType_" + id + "'></span>"
           + "<br/> <span id='meaning_" + id + "'></span>";
         return '<tr><td style="text-align: left;">' + textWithLink + '</td><td style="text-align: left;">' + record.date + '</td>' + savedCount + viewCount + source + action + '</tr>';
       }
@@ -223,33 +223,10 @@ $(function(){
       var url = $(dicResult).find('#searchPageResults a:eq(0)').attr('href');
       var mp3 = $(dicResult).find('.audio_play_button:eq(0)').attr('data-src-mp3');
       if(mp3 != undefined){
-        var dicResultDom = $(dicResult);
-        var phonetic = dicResultDom.find('.headpron:eq(0)').text();
-        var title = dicResultDom.find('.pageTitle').text();
-        phonetic = phonetic.replace('Pronunciation:', title);
-        var meaning = dicResultDom.find('.definition:eq(0)').text();
-        $('#phonetic_'+id).text(phonetic);
-        $('#meaning_' + id).text(meaning);
-        var audio = new Audio();
-        audio.src = mp3;
-        stopAudios();
-        audio.play();
-        audios.push(audio);
+        makeSoundAndMeaning(id, dicResult);
       } else {
         $.get(url, function (dicData) {
-          var dicDataDom = $(dicData);
-          var mp3 = dicDataDom.find('.audio_play_button:eq(0)').attr('data-src-mp3');
-          var title = dicDataDom.find('.pageTitle').text();
-          var phonetic = dicDataDom.find('.headpron:eq(0)').text();
-          phonetic = phonetic.replace('Pronunciation:', title);
-          var meaning = dicDataDom.find('.definition:eq(0)').text();
-          $('#phonetic_'+id).text(phonetic);
-          $('#meaning_' + id).text(meaning);
-          var audio = new Audio();
-          audio.src = mp3;
-          stopAudios();
-          audio.play();
-          audios.push(audio);
+          makeSoundAndMeaning(id, dicData);
         });
       }
     });
@@ -266,7 +243,7 @@ $(function(){
 
   var hideTimeout = null;
   $(document).keydown(function(event){
-    if(event.which=="17") {
+    if(event.which=="17" && $('#add').css('display') == 'none') {
       $('#isUKDic').trigger('click');
       var message = '';
       if($('#isUKDic').is(':checked')){
@@ -284,3 +261,24 @@ $(function(){
   });
 
 });
+
+function makeSoundAndMeaning(id, dicData){
+  var dicDataDom = $(dicData);
+  var mp3 = dicDataDom.find('.audio_play_button:eq(0)').attr('data-src-mp3');
+  var title = dicDataDom.find('.pageTitle').text();
+  var phonetic = dicDataDom.find('.headpron:eq(0)').text();
+  phonetic = phonetic.replace('Pronunciation:', title);
+  var meaning = dicDataDom.find('.definition:eq(0)').text();
+  var partOfSpeech = _.map(dicDataDom.find('.partOfSpeech'), function(partOfSpeech){
+    return $(partOfSpeech).text();
+  });
+  partOfSpeech =  '(' + _.uniq(partOfSpeech).join(', ') + ')';
+  $('#phonetic_'+id).text(phonetic);
+  $('#wordType_'+id).text(partOfSpeech);
+  $('#meaning_' + id).text(meaning);
+  var audio = new Audio();
+  audio.src = mp3;
+  stopAudios();
+  audio.play();
+  audios.push(audio);
+}

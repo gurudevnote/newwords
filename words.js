@@ -1,5 +1,6 @@
 var datas = [];
 var events = [];
+var listeningWords = [];
 datas = StorageApi.getAllWordFromLocalStorage();
 events = StorageApi.getAllWordForDisplayingOnCalendar(datas);
 function updateViewCountToUi(word){
@@ -99,7 +100,8 @@ $(function(){
         var source = '<td>&nbsp;</td>';
         var savedCount = '<td>&nbsp;</td>';
         var viewCount = '<td id="viewCount_' + id + '">&nbsp;</td>';
-        var action = '<td><a class="action" word="'+ record.text +'" href="#">delete</a></td>';
+        //var action = '<td><a class="action" word="'+ record.text +'" href="#">delete</a></td>';
+        var action = '<td><span class="action" word="'+ record.text +'"><i class="material-icons">more_vert</i></span></td>';
         if(record.url) {
           source = '<td><a target="_blank" href="' + record.url + '#__highlightword=' + record.text +'">source</a></td>';
         }
@@ -181,14 +183,6 @@ $(function(){
     window.open(dicUrlResult + text);
   });
 
-  $('body').on('click', "a.action", function () {
-    var text =$(this).attr('word');
-    if(confirm('Are you sure to remove the word: ' + text)){
-      localStorage.removeItem(text);
-      window.location.reload();
-    }
-  });
-
   $('body').on('mouseover', "span.fc-title, a[id^=text_]", function () {
     var text = $(this).text();
     var id = text.replace(/\s+/g, '_');
@@ -232,6 +226,27 @@ $(function(){
       }, 1500);
     }    
   });
+
+  $.contextMenu({
+        selector: 'span.action', 
+        trigger: 'left',
+        callback: function(key, options) {
+            var word = $(this['context']).attr('word');
+            if(key == 'delete') {
+              if(confirm('Are you sure to remove the word: ' + word)){
+                localStorage.removeItem(word);
+                window.location.reload();
+              }
+            } else if(key == 'listen') {
+              //add words to listening list
+              listeningWords.push(word);
+            }
+        },
+        items: {
+            "delete": {name: "Delete", icon: "delete"},
+            "listen": {name: "Listen", icon: "listen"},
+        }
+    });
 
 });
 

@@ -52,3 +52,7 @@ div#notice{
   font-weight: bold;
   line-height: 100%;
 }
+
+span.action{
+  cursor: pointer;
+}

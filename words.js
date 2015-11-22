@@ -1,36 +1,9 @@
-var wordCount = localStorage.length;
 var datas = [];
 var events = [];
-for(i = 0; i < wordCount; i++) {
-  var key = localStorage.key(i);
-  var wordObj = localStorage.getObject(key);
-  wordObj.date = moment(wordObj.date).format();
-  wordObj.hideDate = moment(wordObj.date).format('YYYY-MM-DD');
-  if(wordObj.viewCount == undefined || wordObj.viewCount == null) {
-    wordObj.viewCount = 0;
-  }
-
-  if(wordObj.savedCount == undefined || wordObj.savedCount == null) {
-    wordObj.savedCount = 0;
-  }
-
-  datas.push(wordObj);
-  events.push({
-    title: wordObj.text,
-    start: wordObj.date
-  });
-}
-
-var now = moment();
-datas = _.sortBy(datas, function(item){
-  return now - item.date;
-});
-
-function updateViewCount(word){
-  var wordObj = localStorage.getObject(word);
-  wordObj.viewCount = (wordObj.viewCount == undefined ? 0 : wordObj.viewCount) + 1;
-  localStorage.setObject(word, wordObj);
-
+datas = StorageApi.getAllWordFromLocalStorage();
+events = StorageApi.getAllWordForDisplayingOnCalendar(datas);
+function updateViewCountToUi(word){
+  var wordObj = StorageApi.updateViewCountToLocalStorage(word);
   var id = wordObj.text.replace(/\s+/g, '_');
   $('#viewCount_'+id).html(wordObj.viewCount);
   return wordObj.viewCount;
@@ -147,7 +120,7 @@ $(function(){
 
   $('body').on('click', "a[id^=text_]", function () {
     var text =($(this).text());
-    var viewCount = updateViewCount(text);
+    var viewCount = updateViewCountToUi(text);
     dynamicTable.settings.dataset.originalRecords = _.map(dynamicTable.settings.dataset.originalRecords, function(it){
       if(it.text == text){
         it.viewCount = viewCount;

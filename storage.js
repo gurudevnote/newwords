@@ -1,3 +1,4 @@
+StorageApi = {}
 Storage.prototype.setObject = function(key, value) {
   this.setItem(key, JSON.stringify(value));
   try
@@ -26,4 +27,48 @@ function synchronizeChrome(){
 	chrome.storage.sync.set(listWords, function(){
 		alert('synchonize sucessfull');
 	});
+}
+
+StorageApi.getAllWordFromLocalStorage = function(){
+	var wordCount = localStorage.length;
+	var datas = [];
+	var events = [];
+	for(i = 0; i < wordCount; i++) {
+	  var key = localStorage.key(i);
+	  var wordObj = localStorage.getObject(key);
+	  wordObj.date = moment(wordObj.date).format();
+	  wordObj.hideDate = moment(wordObj.date).format('YYYY-MM-DD');
+	  if(wordObj.viewCount == undefined || wordObj.viewCount == null) {
+	    wordObj.viewCount = 0;
+	  }
+
+	  if(wordObj.savedCount == undefined || wordObj.savedCount == null) {
+	    wordObj.savedCount = 0;
+	  }
+	  datas.push(wordObj);	  
+	}
+
+	var now = moment();
+	return _.sortBy(datas, function(item){
+	  return now - item.date;
+	});
+}
+
+StorageApi.getAllWordForDisplayingOnCalendar = function(datas){
+	if(datas == undefined || datas == null) {
+		datas = this.getAllWordFromLocalStorage();
+	}
+	return _.map(datas, function(item){
+		return {
+	    	title: item.text,
+	    	start: item.date
+	  	};
+	});
+}
+
+StorageApi.updateViewCountToLocalStorage = function(word){
+  var wordObj = localStorage.getObject(word);
+  wordObj.viewCount = (wordObj.viewCount == undefined ? 0 : wordObj.viewCount) + 1;
+  localStorage.setObject(word, wordObj);
+  return wordObj;
 }

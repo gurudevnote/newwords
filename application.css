@@ -28,6 +28,7 @@ span.fc-title {
 
 .correctedWord{
   font-weight: bold;
+  font-size: 1.5em;
 }
 
 #my-final-table tr:hover {
@@ -62,5 +63,6 @@ tr.listening {
 }
 
 tr.currentplaying {
-  background-color: green;
+  background-color: black;
+  color: white;  
 }

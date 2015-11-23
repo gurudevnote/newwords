@@ -56,3 +56,11 @@ div#notice{
 span.action{
   cursor: pointer;
 }
+
+tr.listening {
+  background-color: #F2F2F2;
+}
+
+tr.currentplaying {
+  background-color: green;
+}

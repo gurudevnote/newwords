@@ -25,10 +25,17 @@
    * Override globally by setting window.sm2BarPlayers.on = {}, or individually by window.sm2BarPlayers[0].on = {} etc.
    */
   players.on = {
-    /*
+    
     play: function(player) {
-      console.log('playing', player);
+      //console.log('playing', player);
+
+      var word = $('.sm2-playlist-bd li.selected').attr('word');
+      console.log('play sound of word', word);
+      var id = 'text_' +word.trim().replace(/\s+/g, '_');
+      $('#my-final-table tbody tr').removeClass('currentplaying');
+      $('a[id='+id+']').closest('tr').addClass('currentplaying');
     },
+    /*
     finish: function(player) {
       // each sound
       console.log('finish', player);

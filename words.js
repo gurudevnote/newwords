@@ -257,7 +257,7 @@ $(function(){
 });
 
 function makeSoundAndMeaning(id, dicDataWebContent){
-  var dicData = getDicDataFromWebContent(dicDataWebContent);
+  var dicData = getDicDataFromWebContent('', dicDataWebContent);
   $('#phonetic_'+id).text(dicData.phonetic);
   $('#wordType_'+id).text(dicData.partOfSpeech);
   $('#meaning_' + id).text(dicData.meaning);
@@ -273,18 +273,18 @@ function getDictionaryDataOfWord(text, callback){
     var url = $(dicDataWebContent).find('#searchPageResults a:eq(0)').attr('href');
     var mp3 = $(dicDataWebContent).find('.audio_play_button:eq(0)').attr('data-src-mp3');
     if(mp3 != undefined){
-      var dicData = getDicDataFromWebContent(dicDataWebContent);
+      var dicData = getDicDataFromWebContent(text, dicDataWebContent);
       callback(dicData);
     } else {
       $.get(url, function (dicDataWebContent) {
-        var dicData = getDicDataFromWebContent(dicDataWebContent);
+        var dicData = getDicDataFromWebContent(text, dicDataWebContent);
         callback(dicData);
       });
     }
   });
 }
 
-function getDicDataFromWebContent(dicDataWebContent){
+function getDicDataFromWebContent(word, dicDataWebContent){
   var dicDataDom = $(dicDataWebContent);
   var mp3 = dicDataDom.find('.audio_play_button:eq(0)').attr('data-src-mp3');
   var title = dicDataDom.find('.pageTitle').text();
@@ -297,6 +297,8 @@ function getDicDataFromWebContent(dicDataWebContent){
   partOfSpeech =  '(' + _.uniq(partOfSpeech).join(', ') + ')';
 
   return {
+    word: word,
+    correctedWord: title,
     title: title,
     mp3: mp3,
     phonetic: phonetic,
@@ -313,9 +315,9 @@ function playAudio(audioSrc){
 }
 
 function addSoundOfWordToPlaylist(dicData){
-  if($('ul.sm2-playlist-bd li[word="'+dicData.title+'"]').length == 0){
-    var wordData = "<span class='correctedWord'>"+dicData.title+"</span><span>"+dicData.phonetic + dicData.partOfSpeech +"</span>"
-          + "<br/> <span>"+dicData.meaning+"</span>";
-    $('ul.sm2-playlist-bd').append('<li word="'+dicData.title+'"><a href="'+dicData.mp3+'">'+wordData+'</a></li>');
+  if($('ul.sm2-playlist-bd li[word="'+dicData.word+'"]').length == 0){
+    var wordData = "<span class='correctedWord'>"+dicData.phonetic+"</span><span>" + dicData.partOfSpeech +"</span>"
+          + "<span>"+dicData.meaning+"</span>";
+    $('ul.sm2-playlist-bd').append('<li word="'+dicData.word+'"><a href="'+dicData.mp3+'">'+wordData+'</a></li>');
   }
 }

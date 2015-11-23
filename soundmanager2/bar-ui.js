@@ -27,10 +27,7 @@
   players.on = {
     
     play: function(player) {
-      //console.log('playing', player);
-
       var word = $('.sm2-playlist-bd li.selected').attr('word');
-      console.log('play sound of word', word);
       var id = 'text_' +word.trim().replace(/\s+/g, '_');
       $('#my-final-table tbody tr').removeClass('currentplaying');
       $('a[id='+id+']').closest('tr').addClass('currentplaying');

@@ -249,8 +249,8 @@ $(function(){
             }
         },
         items: {
-            "delete": {name: "Delete", icon: "delete"},
             "listen": {name: "Listen", icon: "listen"},
+            "delete": {name: "Delete", icon: "delete"},            
         }
     });
 
@@ -262,7 +262,7 @@ function makeSoundAndMeaning(id, dicDataWebContent){
   $('#wordType_'+id).text(dicData.partOfSpeech);
   $('#meaning_' + id).text(dicData.meaning);
   var audio = new Audio();
-  audio.src = mp3;
+  audio.src = dicData.mp3;
   stopAudios();
   audio.play();
   audios.push(audio);
@@ -287,7 +287,7 @@ function getDictionaryDataOfWord(text, callback){
 function getDicDataFromWebContent(word, dicDataWebContent){
   var dicDataDom = $(dicDataWebContent);
   var mp3 = dicDataDom.find('.audio_play_button:eq(0)').attr('data-src-mp3');
-  var title = dicDataDom.find('.pageTitle').text();
+  var title = dicDataDom.find('.pageTitle:eq(0)').text();
   var phonetic = dicDataDom.find('.headpron:eq(0)').text();
   phonetic = phonetic.replace('Pronunciation:', title);
   var meaning = dicDataDom.find('.definition:eq(0)').text();

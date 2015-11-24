@@ -66,3 +66,15 @@ tr.currentplaying {
   background-color: black;
   color: white;  
 }
+
+.examples {
+  margin-left: 10px;
+  display: block;
+  font-style: italic;
+}
+.exmples:empty{
+  display: none;
+}
+.cambridge_icon {
+  width: 10px;
+}

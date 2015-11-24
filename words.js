@@ -13,6 +13,7 @@ function updateViewCountToUi(word){
 var dicUrl = "http://www.oxforddictionaries.com/definition/english/";
 var dicUrlResult = 'http://www.oxforddictionaries.com/search/?multi=1&dictCode=english&q=';
 var googleImages = 'https://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&q=';
+var cambridgeDic = 'http://dictionary.cambridge.org/dictionary/english/';
 var dynamicTable = null;
 var audios = [];
 function stopAudios(){
@@ -115,10 +116,13 @@ $(function(){
         if(record.viewCount) {
           viewCount = '<td id="viewCount_' + id + '">' + record.viewCount + '</td>';
         }
+        var cambridgeWordLink = cambridgeDic + record.text;
+        var cambridgeLink = ' <a id="cambridge_'+id+'" target="_blank" word="'+record.text+'" href="'+cambridgeWordLink+'"><image class="cambridge_icon" src="images/cambridge.ico"></a>';
         var textWithLink = "<a google-image='' target='_blank' id='text_" + id
-          + "' href='" + dicUrlResult + record.text +"'>" + record.text
-          + "</a> <span class='correctedWord' id='phonetic_" + id + "'></span><span id='wordType_" + id + "'></span>"
-          + "<br/> <span id='meaning_" + id + "'></span>";
+          + "' href='" + dicUrlResult + record.text +"'>" + record.text + "</a>"
+          + cambridgeLink
+          + " <span class='correctedWord' id='phonetic_" + id + "'></span><span id='wordType_" + id + "'></span>"
+          + "<br/> <span id='meaning_" + id + "'></span><span class='examples' id='examples_" + id + "'></span>";
         return '<tr class="' + tdClass + '"><td style="text-align: left;">' + textWithLink + '</td><td style="text-align: left;">' + record.date + '</td>' + savedCount + viewCount + source + action + '</tr>';
       }
     },
@@ -261,6 +265,9 @@ function makeSoundAndMeaning(id, dicDataWebContent){
   $('#phonetic_'+id).text(dicData.phonetic);
   $('#wordType_'+id).text(dicData.partOfSpeech);
   $('#meaning_' + id).text(dicData.meaning);
+  $('#examples_' + id).html(dicData.examplesText);
+  $('#text_' + id).attr('correctedWord', dicData.correctedWord);
+  $('#cambridge_' + id).attr('href', cambridgeDic + dicData.correctedWord);
   var audio = new Audio();
   audio.src = dicData.mp3;
   stopAudios();
@@ -287,7 +294,7 @@ function getDictionaryDataOfWord(text, callback){
 function getDicDataFromWebContent(word, dicDataWebContent){
   var dicDataDom = $(dicDataWebContent);
   var mp3 = dicDataDom.find('.audio_play_button:eq(0)').attr('data-src-mp3');
-  var title = dicDataDom.find('.pageTitle:eq(0)').text();
+  var title = dicDataDom.find('.pageTitle:eq(0)').text().trim();
   var phonetic = dicDataDom.find('.headpron:eq(0)').text();
   phonetic = phonetic.replace('Pronunciation:', title);
   var meaning = dicDataDom.find('.definition:eq(0)').text();
@@ -295,7 +302,10 @@ function getDicDataFromWebContent(word, dicDataWebContent){
     return $(partOfSpeech).text();
   });
   partOfSpeech =  '(' + _.uniq(partOfSpeech).join(', ') + ')';
-
+  var examples = _.map(dicDataDom.find('.msDict.sense:eq(0) .exampleGroup.exGrBreak'), function(item){
+    return $(item).text();
+  });
+  var examplesText = examples.join('<br/>');
   return {
     word: word,
     correctedWord: title,
@@ -303,7 +313,9 @@ function getDicDataFromWebContent(word, dicDataWebContent){
     mp3: mp3,
     phonetic: phonetic,
     meaning: meaning,
-    partOfSpeech: partOfSpeech
+    partOfSpeech: partOfSpeech,
+    examples: examples,
+    examplesText: examplesText
   }
 }
 

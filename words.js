@@ -12,7 +12,8 @@ function updateViewCountToUi(word){
 
 var dicUrl = "http://www.oxforddictionaries.com/definition/english/";
 var dicUrlResult = 'http://www.oxforddictionaries.com/search/?multi=1&dictCode=english&q=';
-var googleImages = 'https://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&q=';
+var googleImagesApi = 'https://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&q=';
+var googleImagesWeb = 'https://www.google.com/search?tbm=isch&q=';
 var cambridgeDic = 'http://dictionary.cambridge.org/dictionary/english/';
 var dynamicTable = null;
 var audios = [];
@@ -165,19 +166,26 @@ $(function(){
       tooltipClass: 'images-tooltip',
       content: function(callback){
         var text =($(this).text());
-        $.getJSON(googleImages + text, function(data){
-          var listImages = _.map(data.responseData.results, function(item){
-            return {tbUrl: item.tbUrl, tbHeight: item.tbHeight, tbWidth: item.tbWidth, url: item.url, width: item.width, height: item.height}
+        $.get(googleImagesWeb + text, function(data){
+            var listImages = $.map($(data).find('[data-src^=http]'),function(item){
+              var linkData = $(item).parent().attr('href');
+
+              return {
+                url: $(item).attr('data-src'),
+                realUrl: /imgurl=([^&]+)/.exec(linkData)[1],
+                refUrl: /imgrefurl=([^&]+)/.exec(linkData)[1]
+              };
+            });
+            var listImagesContent = _.map(listImages, function(it){
+            return '<img src="' + it.url + '"/>';
+            });
+            var listBigImage = _.map(listImages, function(it){
+              return '<img src="' +it.realUrl + '" />';
+            });
+            $('#google-images').html(listBigImage);
+            console.dir(listImages);
+            callback(listImagesContent.join(' '));
           });
-          var listImagesContent = _.map(listImages, function(it){
-          return '<img src="' + it.url + '"/>';
-          });
-          var listBigImage = _.map(listImages, function(it){
-            return '<img src="' +it.url + '" />';
-          });
-          $('#google-images').html(listBigImage);
-          callback(listImagesContent.join(' '));
-        });
       },
       position: {
         my: "left top+15",

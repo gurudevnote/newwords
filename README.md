@@ -5,7 +5,7 @@ NewWords is a chrome extension to store new words in your browser's local storag
 Install
 =============
 
-Clone my source code
+Clone source code
 
 ```
 git clone https://github.com/nguyenhuuhuy/newwords.git

@@ -183,7 +183,6 @@ $(function(){
               return '<img src="' +it.realUrl + '" />';
             });
             $('#google-images').html(listBigImage);
-            console.dir(listImages);
             callback(listImagesContent.join(' '));
           });
       },

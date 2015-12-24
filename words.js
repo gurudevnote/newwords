@@ -301,7 +301,7 @@ function getDictionaryDataOfWord(text, callback){
 function getDicDataFromWebContent(word, dicDataWebContent){
   var dicDataDom = $(dicDataWebContent);
   var mp3 = dicDataDom.find('.audio_play_button:eq(0)').attr('data-src-mp3');
-  var title = dicDataDom.find('.pageTitle:eq(0)').text().trim();
+  var title = dicDataDom.find('.pageTitle:eq(0)').text().trim().replace(/\d+/i, '');
   var phonetic = dicDataDom.find('.headpron:eq(0)').text();
   phonetic = phonetic.replace('Pronunciation:', title);
   var meaning = dicDataDom.find('.definition:eq(0)').text();

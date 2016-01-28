@@ -108,7 +108,13 @@ $(function(){
         var viewCount = '<td id="viewCount_' + id + '">&nbsp;</td>';
         //var action = '<td><a class="action" word="'+ record.text +'" href="#">delete</a></td>';
         var action = '<td><span class="action" word="'+ record.text +'"><i class="material-icons">more_vert</i></span></td>';
-        if(record.url) {
+        if(record.urls) {
+          if(record.urls.length == 1){
+            source = '<td><a target="_blank" href="' + record.urls[0] + '#__highlightword=' + record.text +'">source</a></td>';
+          } else {
+            source = '<td><a target="_blank" href="sources.html?word='+ record.text +'">sources</a>('+record.urls.length+')</td>';
+          }
+        } else if(record.url) {
           source = '<td><a target="_blank" href="' + record.url + '#__highlightword=' + record.text +'">source</a></td>';
         }
         if(record.savedCount) {

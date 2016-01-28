@@ -19,21 +19,53 @@ function onClickHandler(info, tab) {
   var selectedText = info.selectionText.toLowerCase();
   var url = tab.url;
   var wordObj = localStorage.getObject(selectedText);
+  var urls = wordObj.urls || [];
+
+  if(canAddStringToArray(url, urls))
+  {
+    urls.push(url);
+  }
+
+  if(canAddStringToArray(wordObj.url, urls))
+  {
+    urls.push(wordObj.url);
+  }
+
   if(wordObj == undefined || wordObj == null) {
     localStorage.setObject(selectedText, {
       "text": selectedText,
       "date": new Date(),
-      "url": url,
+      "url" : url,
+      "urls": urls,
       "viewCount": 0,
       "savedCount": 1
     });
   } else {
     wordObj.date = new Date();
     wordObj.savedCount = (wordObj.savedCount==undefined ? 0 : wordObj.savedCount) + 1;
+    wordObj.url = url,
+    wordObj.urls = urls
     localStorage.setObject(selectedText, wordObj);
+    console.dir(wordObj);
   }
   chrome.browserAction.setBadgeText({text: localStorage.length + ''});
 };
+
+function canAddStringToArray(str, arr){
+  if(str)
+  {
+    var isExisted = false;
+    urls.map(function(it){
+      if(it.toLowerCase() === url.toLowerCase()){
+        isExisted = true;
+      }
+    });
+
+    return !isExisted;
+  }
+
+  return false;
+}
 
 chrome.browserAction.onClicked.addListener(function () {
   //close all extension tabs

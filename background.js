@@ -19,16 +19,18 @@ function onClickHandler(info, tab) {
   var selectedText = info.selectionText.toLowerCase();
   var url = tab.url;
   var wordObj = localStorage.getObject(selectedText);
-  var urls = wordObj.urls || [];
+  var urls = wordObj && wordObj.urls || [];
 
   if(canAddStringToArray(url, urls))
   {
     urls.push(url);
   }
 
-  if(canAddStringToArray(wordObj.url, urls))
-  {
-    urls.push(wordObj.url);
+  if(wordObj && wordObj.url) {
+    if(canAddStringToArray(wordObj.url, urls))
+    {
+      urls.push(wordObj.url);
+    }
   }
 
   if(wordObj == undefined || wordObj == null) {

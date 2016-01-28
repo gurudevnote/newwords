@@ -43,10 +43,9 @@ function onClickHandler(info, tab) {
   } else {
     wordObj.date = new Date();
     wordObj.savedCount = (wordObj.savedCount==undefined ? 0 : wordObj.savedCount) + 1;
-    wordObj.url = url,
-    wordObj.urls = urls
+    wordObj.url = url;
+    wordObj.urls = urls;
     localStorage.setObject(selectedText, wordObj);
-    console.dir(wordObj);
   }
   chrome.browserAction.setBadgeText({text: localStorage.length + ''});
 };
@@ -55,8 +54,8 @@ function canAddStringToArray(str, arr){
   if(str)
   {
     var isExisted = false;
-    urls.map(function(it){
-      if(it.toLowerCase() === url.toLowerCase()){
+    arr.map(function(it){
+      if(it.toLowerCase() === str.toLowerCase()){
         isExisted = true;
       }
     });

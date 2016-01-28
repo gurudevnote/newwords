@@ -22,4 +22,8 @@ $(function(){
 		    alert('number items is imported from chrome storage to local storage is ' + numberUpdated + '\n' + updatedKeys.join('\n'));
 		});
 	});
+
+	$("#exportToJson").click(function(){
+		$('#result').html(JSON.stringify(StorageApi.getAllWordFromLocalStorage(),  null, 4));
+	});
 });

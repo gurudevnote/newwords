@@ -10,8 +10,9 @@ function updateViewCountToUi(word){
   return wordObj.viewCount;
 }
 
-var dicUrl = "http://www.oxforddictionaries.com/definition/english/";
-var dicUrlResult = 'http://www.oxforddictionaries.com/search/?multi=1&dictCode=english&q=';
+var dicUrl = "https://en.oxforddictionaries.com/definition/";
+//var dicUrlResult = 'https://en.oxforddictionaries.com/search?utf8=%E2%9C%93&filter=dictionary&query=';
+var dicUrlResult = dicUrl;
 var googleImagesApi = 'https://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&q=';
 var googleImagesWeb = 'https://www.google.com/search?tbm=isch&q=';
 var cambridgeDic = 'http://dictionary.cambridge.org/dictionary/english/';
@@ -128,7 +129,8 @@ $(function(){
         var textWithLink = "<a google-image='' target='_blank' id='text_" + id
           + "' href='" + dicUrlResult + record.text +"'>" + record.text + "</a>"
           + cambridgeLink
-          + " <span class='correctedWord' id='phonetic_" + id + "'></span><span id='wordType_" + id + "'></span>"
+          + ' <a href="' + googleImagesWeb + record.text + '" target="_blank"><image class="google_icon" src="images/googleg_lodp.ico"></a>'
+          + "<span class='correctedWord' id='phonetic_" + id + "'></span><span id='wordType_" + id + "'></span>"
           + "<br/> <span id='meaning_" + id + "'></span><span class='examples' id='examples_" + id + "'></span>";
         return '<tr class="' + tdClass + '"><td style="text-align: left;">' + textWithLink + '</td><td style="text-align: left;">' + record.date + '</td>' + savedCount + viewCount + source + action + '</tr>';
       }
@@ -207,25 +209,20 @@ $(function(){
   $('body').on('mouseover', "span.fc-title, a[id^=text_]", function () {
     var text = $(this).text();
     var id = text.replace(/\s+/g, '_');
-    $.get(dicUrlResult + text, function(dicResult){
-      var url = $(dicResult).find('#searchPageResults a:eq(0)').attr('href');
-      var mp3 = $(dicResult).find('.audio_play_button:eq(0)').attr('data-src-mp3');
+    $.get(dicUrlResult + text, function(dicResult, textStatus, xhr){
+      var mp3 = $(dicResult).find('.headwordAudio audio:eq(0)').attr('src');
       if(mp3 != undefined){
         makeSoundAndMeaning(id, dicResult);
-      } else {
-        $.get(url, function (dicData) {
-          makeSoundAndMeaning(id, dicData);
-        });
       }
     });
   });
   $('#isUKDic').click(function(){    
     if($(this).is(':checked')){
-      dicUrl = "http://www.oxforddictionaries.com/definition/english/";
-      dicUrlResult = 'http://www.oxforddictionaries.com/search/?multi=1&dictCode=english&q=';
+      dicUrl = "https://en.oxforddictionaries.com/definition/";
+      dicUrlResult = 'https://en.oxforddictionaries.com/definition/';
     } else {
-      dicUrl = "http://www.oxforddictionaries.com/definition/american_english/";
-      dicUrlResult = 'http://www.oxforddictionaries.com/search/?multi=1&dictCode=american_english&q=';
+      dicUrl = "https://en.oxforddictionaries.com/definition/us/";
+      dicUrlResult = 'https://en.oxforddictionaries.com/definition/us/';
     }
   });
 

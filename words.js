@@ -130,6 +130,7 @@ $(function(){
           + "' href='" + dicUrlResult + record.text +"'>" + record.text + "</a>"
           + cambridgeLink
           + ' <a href="' + googleImagesWeb + record.text + '" target="_blank"><image class="google_icon" src="images/googleg_lodp.ico"></a>'
+          + ' <a href="https://translate.google.com/#en/vi/' + record.text + '" target="_blank"><image class="google_icon" src="images/google_translate.ico"></a>'
           + "<span class='correctedWord' id='phonetic_" + id + "'></span><span id='wordType_" + id + "'></span>"
           + "<br/> <span id='meaning_" + id + "'></span><span class='examples' id='examples_" + id + "'></span>";
         return '<tr class="' + tdClass + '"><td style="text-align: left;">' + textWithLink + '</td><td style="text-align: left;">' + record.date + '</td>' + savedCount + viewCount + source + action + '</tr>';

@@ -317,19 +317,20 @@ function getDictionaryDataOfWord(text, callback){
 
 function getDicDataFromWebContent(word, dicDataWebContent){
   var dicDataDom = $(dicDataWebContent);
-  var mp3 = dicDataDom.find('.audio_play_button:eq(0)').attr('data-src-mp3');
-  var title = dicDataDom.find('.pageTitle:eq(0)').text().trim().replace(/\d+/i, '');
-  var phonetic = dicDataDom.find('.headpron:eq(0)').text();
+  var mp3 = dicDataDom.find('.headwordAudio audio:eq(0)').attr('src');
+  var title = dicDataDom.find('[data-headword-id]:eq(0)').attr('data-headword-id').trim().replace(/\d+/i, '');
+  var phonetic = dicDataDom.find('.phoneticspelling:eq(0)').text();
   phonetic = phonetic.replace('Pronunciation:', title);
-  var meaning = dicDataDom.find('.definition:eq(0)').text();
-  var partOfSpeech = _.map(dicDataDom.find('.partOfSpeechTitle > .partOfSpeech'), function(partOfSpeech){
+  var meaning = dicDataDom.find('.semb .ind:eq(0)').text() + dicDataDom.find('.semb .ex:eq(0)').text();
+  var partOfSpeech = _.map(dicDataDom.find('.pos'), function(partOfSpeech){
     return $(partOfSpeech).text();
   });
   partOfSpeech =  '(' + _.uniq(partOfSpeech).join(', ') + ')';
-  var examples = _.map(dicDataDom.find('.msDict.sense:eq(0) .exampleGroup.exGrBreak'), function(item){
+  var examples = _.map(dicDataDom.find('.exg'), function(item){
     return $(item).text();
   });
-  var examplesText = examples.join('<br/>');
+  //var examplesText = examples.join('<br/>');
+  var examplesText = '';
   return {
     word: word,
     correctedWord: title,

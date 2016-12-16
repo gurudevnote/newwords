@@ -10,6 +10,11 @@ function updateViewCountToUi(word){
   return wordObj.viewCount;
 }
 
+$.ajaxPrefilter(function( options ) {
+  options.url = "http://localhost:3000/?url=" + encodeURIComponent( options.url );
+});
+
+
 var dicUrl = "https://en.oxforddictionaries.com/definition/";
 //var dicUrlResult = 'https://en.oxforddictionaries.com/search?utf8=%E2%9C%93&filter=dictionary&query=';
 var dicUrlResult = dicUrl;
@@ -178,12 +183,20 @@ $(function(){
         $.get(googleImagesWeb + text, function(data){
             var listImages = $.map($(data).find('[data-src^=http]'),function(item){
               var linkData = $(item).parent().attr('href');
+              var result = {url: '', realUrl: '', refUrl: ''};
+              try {
+                result = {
+                  url: $(item).attr('data-src'),
+                  realUrl: decodeURIComponent(/\/imgres\?imgurl=([^&]+)/.exec(linkData)[1]),
+                  refUrl: decodeURIComponent(/&imgrefurl=([^&]+)/.exec(linkData)[1])
+                };
+              } catch (e) {
 
-              return {
-                url: $(item).attr('data-src'),
-                realUrl: /imgurl=([^&]+)/.exec(linkData)[1],
-                refUrl: /imgrefurl=([^&]+)/.exec(linkData)[1]
-              };
+              } finally {
+
+              }
+
+              return result;
             });
             var listImagesContent = _.map(listImages, function(it){
             return '<img src="' + it.url + '"/>';
@@ -217,7 +230,7 @@ $(function(){
       }
     });
   });
-  $('#isUKDic').click(function(){    
+  $('#isUKDic').click(function(){
     if($(this).is(':checked')){
       dicUrl = "https://en.oxforddictionaries.com/definition/";
       dicUrlResult = 'https://en.oxforddictionaries.com/definition/';
@@ -243,11 +256,11 @@ $(function(){
       hideTimeout = setTimeout(function(){
         $('#notice').hide();
       }, 1500);
-    }    
+    }
   });
 
   $.contextMenu({
-        selector: 'span.action', 
+        selector: 'span.action',
         trigger: 'left',
         callback: function(key, options) {
             var word = $(this['context']).attr('word');
@@ -265,7 +278,7 @@ $(function(){
         },
         items: {
             "listen": {name: "Listen", icon: "listen"},
-            "delete": {name: "Delete", icon: "delete"},            
+            "delete": {name: "Delete", icon: "delete"},
         }
     });
 

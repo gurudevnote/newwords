@@ -193,7 +193,7 @@ $(function(){
       content: function(callback){
         var text =($(this).text());
         var wordObj = StorageApi.getWord(text);
-        if(wordObj && wordObj.googleImages){
+        if(wordObj && wordObj.googleImages && wordObj.googleImages.length > 0){
           var listImages = wordObj.googleImages;
           displayGoogleImages(listImages, callback);
         }
@@ -238,12 +238,19 @@ $(function(){
   $('body').on('mouseover', "span.fc-title, a[id^=text_]", function () {
     var text = $(this).text();
     var id = text.replace(/\s+/g, '_');
-    $.get(dicUrlResult + text, function(dicResult, textStatus, xhr){
-      var mp3 = $(dicResult).find('.headwordAudio audio:eq(0)').attr('src');
-      if(mp3 != undefined){
-        makeSoundAndMeaning(id, dicResult);
-      }
-    });
+    var wordObj = StorageApi.getWord(text);
+    if(wordObj && wordObj.wordDictionaryData){
+      makeSoundAndMeaning(id, wordObj.wordDictionaryData);
+    } else {
+      $.get(dicUrlResult + text, function(dicResult, textStatus, xhr){
+        var mp3 = $(dicResult).find('.headwordAudio audio:eq(0)').attr('src');
+        if(mp3 != undefined){
+          var dicData = getDicDataFromWebContent(text, dicResult);
+          StorageApi.setWordDictionaryData(text, dicData);
+          makeSoundAndMeaning(id, dicData);
+        }
+      });
+    }
   });
   $('#isUKDic').click(function(){
     if($(this).is(':checked')){
@@ -288,7 +295,10 @@ $(function(){
               //add words to listening list
               listeningWords.push(word);
               $(this['context']).closest('tr').addClass('listening');
-              getDictionaryDataOfWord(word, addSoundOfWordToPlaylist);
+              var wordObj = StorageApi.getWord(word);
+              if(wordObj && wordObj.wordDictionaryData){
+                addSoundOfWordToPlaylist(wordObj.wordDictionaryData);
+              }
             }
         },
         items: {
@@ -299,8 +309,7 @@ $(function(){
 
 });
 
-function makeSoundAndMeaning(id, dicDataWebContent){
-  var dicData = getDicDataFromWebContent('', dicDataWebContent);
+function makeSoundAndMeaning(id, dicData){
   $('#phonetic_'+id).text(dicData.phonetic);
   $('#wordType_'+id).text(dicData.partOfSpeech);
   $('#meaning_' + id).text(dicData.meaning);
@@ -371,5 +380,9 @@ function addSoundOfWordToPlaylist(dicData){
     var wordData = "<span class='correctedWord'>"+dicData.phonetic+"</span><span>" + dicData.partOfSpeech +"</span>"
           + "<span>"+dicData.meaning+"</span>";
     $('ul.sm2-playlist-bd').append('<li word="'+dicData.word+'"><a href="'+dicData.mp3+'">'+wordData+'</a></li>');
+  }else if($('ul.sm2-playlist-bd li[word="'+dicData.title+'"]').length == 0){
+    var wordData = "<span class='correctedWord'>"+dicData.phonetic+"</span><span>" + dicData.partOfSpeech +"</span>"
+        + "<span>"+dicData.meaning+"</span>";
+    $('ul.sm2-playlist-bd').append('<li word="'+dicData.title+'"><a href="'+dicData.mp3+'">'+wordData+'</a></li>');
   }
 }

@@ -299,11 +299,17 @@ $(function(){
               if(wordObj && wordObj.wordDictionaryData){
                 addSoundOfWordToPlaylist(wordObj.wordDictionaryData);
               }
+            } else if(key == 'clear images'){
+              StorageApi.setWordGoogleImages(word, undefined);
+            } else if(key == 'clear dictionary data'){
+              StorageApi.setWordDictionaryData(word, undefined);
             }
         },
         items: {
             "listen": {name: "Listen", icon: "listen"},
             "delete": {name: "Delete", icon: "delete"},
+            "clear images": {name: "clear images", icon: "delete"},
+            "clear dictionary data": {name: "clear dictionary data", icon: "delete"},
         }
     });
 

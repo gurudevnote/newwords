@@ -52,7 +52,7 @@ StorageApi.getAllWordFromLocalStorage = function(){
 	return _.sortBy(datas, function(item){
 	  return now - item.date;
 	});
-}
+};
 
 StorageApi.getAllWordForDisplayingOnCalendar = function(datas){
 	if(datas == undefined || datas == null) {
@@ -64,11 +64,29 @@ StorageApi.getAllWordForDisplayingOnCalendar = function(datas){
 	    	start: item.date
 	  	};
 	});
-}
+};
 
 StorageApi.updateViewCountToLocalStorage = function(word){
   var wordObj = localStorage.getObject(word);
   wordObj.viewCount = (wordObj.viewCount == undefined ? 0 : wordObj.viewCount) + 1;
   localStorage.setObject(word, wordObj);
   return wordObj;
+};
+
+StorageApi.setWordGoogleImages = function (word, googleImages) {
+	var wordObj = localStorage.getObject(word);
+	wordObj.googleImages = googleImages;
+	localStorage.setObject(word, wordObj);
+	return wordObj;
+};
+
+StorageApi.setWordDictionaryData = function (word, wordDictionaryData) {
+	var wordObj = localStorage.getObject(word);
+	wordObj.wordDictionaryData = wordDictionaryData;
+	localStorage.setObject(word, wordObj);
+	return wordObj;
+};
+
+StorageApi.getWord = function (word) {
+	return  localStorage.getObject(word);
 }

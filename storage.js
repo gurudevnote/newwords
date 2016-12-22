@@ -1,13 +1,13 @@
 StorageApi = {}
 Storage.prototype.setObject = function(key, value) {
   this.setItem(key, JSON.stringify(value));
-  try
-  {
-  	var wordObj = {};
-  	wordObj[key] = JSON.stringify(value);
-  	chrome.storage.sync.set(wordObj);
-  }
-  catch(err){}
+  // try
+  // {
+  // 	var wordObj = {};
+  // 	wordObj[key] = JSON.stringify(value);
+  // 	chrome.storage.sync.set(wordObj);
+  // }
+  // catch(err){}
 }
 
 Storage.prototype.getObject = function(key) {
@@ -85,6 +85,20 @@ StorageApi.setWordDictionaryData = function (word, wordDictionaryData) {
 	wordObj.wordDictionaryData = wordDictionaryData;
 	localStorage.setObject(word, wordObj);
 	return wordObj;
+};
+
+StorageApi.setWordUkDictionaryData = function (word, wordDictionaryData) {
+    var wordObj = localStorage.getObject(word);
+    wordObj.wordUkDictionaryData = wordDictionaryData;
+    localStorage.setObject(word, wordObj);
+    return wordObj;
+};
+
+StorageApi.setWordUsDictionaryData = function (word, wordDictionaryData) {
+    var wordObj = localStorage.getObject(word);
+    wordObj.wordUsDictionaryData = wordDictionaryData;
+    localStorage.setObject(word, wordObj);
+    return wordObj;
 };
 
 StorageApi.getWord = function (word) {

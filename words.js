@@ -1,6 +1,7 @@
 var datas = [];
 var events = [];
 var listeningWords = [];
+var defaultDictionaryCountry = 'Uk';
 datas = StorageApi.getAllWordFromLocalStorage();
 events = StorageApi.getAllWordForDisplayingOnCalendar(datas);
 function updateViewCountToUi(word){
@@ -239,14 +240,19 @@ $(function(){
     var text = $(this).text();
     var id = text.replace(/\s+/g, '_');
     var wordObj = StorageApi.getWord(text);
-    if(wordObj && wordObj.wordDictionaryData){
-      makeSoundAndMeaning(id, wordObj.wordDictionaryData);
+    var dictionaryDataKey = 'word' + defaultDictionaryCountry + 'DictionaryData';
+    if(wordObj && wordObj[dictionaryDataKey]){
+      makeSoundAndMeaning(id, wordObj[dictionaryDataKey]);
     } else {
       $.get(dicUrlResult + text, function(dicResult, textStatus, xhr){
         var mp3 = $(dicResult).find('.headwordAudio audio:eq(0)').attr('src');
         if(mp3 != undefined){
           var dicData = getDicDataFromWebContent(text, dicResult);
-          StorageApi.setWordDictionaryData(text, dicData);
+          if(defaultDictionaryCountry === 'Uk'){
+            StorageApi.setWordUkDictionaryData(text, dicData);
+          } else {
+            StorageApi.setWordUsDictionaryData(text, dicData);
+          }
           makeSoundAndMeaning(id, dicData);
         }
       });
@@ -256,9 +262,11 @@ $(function(){
     if($(this).is(':checked')){
       dicUrl = "https://en.oxforddictionaries.com/definition/";
       dicUrlResult = 'https://en.oxforddictionaries.com/definition/';
+      defaultDictionaryCountry = 'Uk';
     } else {
       dicUrl = "https://en.oxforddictionaries.com/definition/us/";
       dicUrlResult = 'https://en.oxforddictionaries.com/definition/us/';
+      defaultDictionaryCountry = 'Us';
     }
   });
 
@@ -296,13 +304,16 @@ $(function(){
               listeningWords.push(word);
               $(this['context']).closest('tr').addClass('listening');
               var wordObj = StorageApi.getWord(word);
-              if(wordObj && wordObj.wordDictionaryData){
-                addSoundOfWordToPlaylist(wordObj.wordDictionaryData);
+              var dictionaryDataKey = 'word' + defaultDictionaryCountry + 'DictionaryData';
+              if(wordObj && wordObj[dictionaryDataKey]){
+                addSoundOfWordToPlaylist(wordObj[dictionaryDataKey]);
               }
             } else if(key == 'clear images'){
               StorageApi.setWordGoogleImages(word, undefined);
             } else if(key == 'clear dictionary data'){
               StorageApi.setWordDictionaryData(word, undefined);
+              StorageApi.setWordUkDictionaryData(word, undefined);
+              StorageApi.setWordUsDictionaryData(word, undefined);
             }
         },
         items: {

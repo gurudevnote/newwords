@@ -12,8 +12,8 @@ function updateViewCountToUi(word){
   return wordObj.viewCount;
 }
 
-$.ajaxPrefilter(function( options ) {
-  options.url = "http://localhost:3000/?url=" + encodeURIComponent( options.url );
+$.ajaxPrefilter(function( options, originalOptions ) {
+  options.url = "http://localhost:3000/?url=" + encodeURIComponent( originalOptions.url );
 });
 
 
@@ -23,6 +23,7 @@ var dicUrlResult = dicUrl;
 var googleImagesApi = 'https://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&q=';
 var googleImagesWeb = 'https://www.google.com/search?tbm=isch&q=';
 var cambridgeDic = 'http://dictionary.cambridge.org/dictionary/english/';
+var googleTranslateToVn = 'https://translate.google.com/#en/vi/';
 var dynamicTable = null;
 var audios = [];
 function stopAudios(){
@@ -31,9 +32,12 @@ function stopAudios(){
   });
 }
 $.ajaxSetup({ cache: true });
+function getWordIdfromWord(text) {
+  return text.replace(/\s+/g, '_');
+}
 function showDictionaryData(text, dictionary) {
   currentSelectedWord = text;
-  var id = text.replace(/\s+/g, '_');
+  var id = getWordIdfromWord(text);
   var wordObj = StorageApi.getWord(text);
   var computedDictionary = dictionary == undefined ? defaultDictionaryCountry : dictionary;
   var dictionaryDataKey = 'word' + computedDictionary + 'DictionaryData';
@@ -54,6 +58,20 @@ function showDictionaryData(text, dictionary) {
     });
   }
 }
+
+function showTranslateFromEnglishToVn(word) {
+  var wordObj = StorageApi.getWord(word);
+  if(wordObj && wordObj.translateFromEnglishToVn){
+    $('#translate_' + getWordIdfromWord(word)).text(wordObj.translateFromEnglishToVn);
+  } else {
+    $.get(googleTranslateToVn + word, function (googleTranslateResult) {
+      var translateText = $(googleTranslateResult).find('#result_box').text();
+      StorageApi.setTranslateFromEnglishToVn(word, translateText);
+      $('#translate_' + getWordIdfromWord(word)).text(translateText);
+    });
+  }
+}
+
 $(function(){
   $('button#showAddForm').click(function(){
     $(this).hide();
@@ -162,6 +180,7 @@ $(function(){
           + ' <a href="' + googleImagesWeb + record.text + '" target="_blank"><image class="google_icon" src="images/googleg_lodp.ico"></a>'
           + ' <a href="https://translate.google.com/#en/vi/' + record.text + '" target="_blank"><image class="google_icon" src="images/google_translate.ico"></a>'
           + "<span class='correctedWord' id='phonetic_" + id + "'></span><span id='wordType_" + id + "'></span>"
+          + "<span class='correctedWord' id='translate_" + id + "'></span>"
           + "<br/> <span id='meaning_" + id + "'></span><span class='examples' id='examples_" + id + "'></span>";
         return '<tr class="' + tdClass + '"><td style="text-align: left;">' + textWithLink + '</td><td style="text-align: left;">' + record.date + '</td>' + savedCount + viewCount + source + action + '</tr>';
       }
@@ -262,6 +281,7 @@ $(function(){
 
   $('body').on('mouseover', "span.fc-title, a[id^=text_]", function () {
     showDictionaryData($(this).text());
+    showTranslateFromEnglishToVn($(this).text());
   });
   $('#isUKDic').click(function(){
     if($(this).is(':checked')){

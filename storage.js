@@ -103,4 +103,11 @@ StorageApi.setWordUsDictionaryData = function (word, wordDictionaryData) {
 
 StorageApi.getWord = function (word) {
 	return  localStorage.getObject(word);
+};
+
+StorageApi.setTranslateFromEnglishToVn = function(word, translatedWord){
+    var wordObj = localStorage.getObject(word);
+    wordObj.translateFromEnglishToVn = translatedWord;
+    localStorage.setObject(word, wordObj);
+    return wordObj;
 }

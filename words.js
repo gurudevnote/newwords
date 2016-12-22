@@ -2,6 +2,7 @@ var datas = [];
 var events = [];
 var listeningWords = [];
 var defaultDictionaryCountry = 'Uk';
+var currentSelectedWord = '';
 datas = StorageApi.getAllWordFromLocalStorage();
 events = StorageApi.getAllWordForDisplayingOnCalendar(datas);
 function updateViewCountToUi(word){
@@ -30,6 +31,29 @@ function stopAudios(){
   });
 }
 $.ajaxSetup({ cache: true });
+function showDictionaryData(text, dictionary) {
+  currentSelectedWord = text;
+  var id = text.replace(/\s+/g, '_');
+  var wordObj = StorageApi.getWord(text);
+  var computedDictionary = dictionary == undefined ? defaultDictionaryCountry : dictionary;
+  var dictionaryDataKey = 'word' + computedDictionary + 'DictionaryData';
+  if (wordObj && wordObj[dictionaryDataKey]) {
+    makeSoundAndMeaning(id, wordObj[dictionaryDataKey]);
+  } else {
+    $.get(dicUrlResult + text, function (dicResult, textStatus, xhr) {
+      var mp3 = $(dicResult).find('.headwordAudio audio:eq(0)').attr('src');
+      if (mp3 != undefined) {
+        var dicData = getDicDataFromWebContent(text, dicResult);
+        if (computedDictionary === 'Uk') {
+          StorageApi.setWordUkDictionaryData(text, dicData);
+        } else {
+          StorageApi.setWordUsDictionaryData(text, dicData);
+        }
+        makeSoundAndMeaning(id, dicData);
+      }
+    });
+  }
+}
 $(function(){
   $('button#showAddForm').click(function(){
     $(this).hide();
@@ -237,26 +261,7 @@ $(function(){
   });
 
   $('body').on('mouseover', "span.fc-title, a[id^=text_]", function () {
-    var text = $(this).text();
-    var id = text.replace(/\s+/g, '_');
-    var wordObj = StorageApi.getWord(text);
-    var dictionaryDataKey = 'word' + defaultDictionaryCountry + 'DictionaryData';
-    if(wordObj && wordObj[dictionaryDataKey]){
-      makeSoundAndMeaning(id, wordObj[dictionaryDataKey]);
-    } else {
-      $.get(dicUrlResult + text, function(dicResult, textStatus, xhr){
-        var mp3 = $(dicResult).find('.headwordAudio audio:eq(0)').attr('src');
-        if(mp3 != undefined){
-          var dicData = getDicDataFromWebContent(text, dicResult);
-          if(defaultDictionaryCountry === 'Uk'){
-            StorageApi.setWordUkDictionaryData(text, dicData);
-          } else {
-            StorageApi.setWordUsDictionaryData(text, dicData);
-          }
-          makeSoundAndMeaning(id, dicData);
-        }
-      });
-    }
+    showDictionaryData($(this).text());
   });
   $('#isUKDic').click(function(){
     if($(this).is(':checked')){
@@ -269,7 +274,7 @@ $(function(){
       defaultDictionaryCountry = 'Us';
     }
   });
-
+  var switchedDictionaryCountry = defaultDictionaryCountry;
   var hideTimeout = null;
   $(document).keydown(function(event){
     if(event.which=="17" && $('#add').css('display') == 'none') {
@@ -286,6 +291,19 @@ $(function(){
       hideTimeout = setTimeout(function(){
         $('#notice').hide();
       }, 1500);
+    }
+
+    if(event.keyCode == 16){
+      if(currentSelectedWord == ''){
+        return;
+      }
+
+      showDictionaryData(currentSelectedWord, switchedDictionaryCountry);
+      if(switchedDictionaryCountry == 'Uk'){
+        switchedDictionaryCountry = 'Us';
+      }else{
+        switchedDictionaryCountry = 'Uk';
+      }
     }
   });
 
@@ -334,22 +352,6 @@ function makeSoundAndMeaning(id, dicData){
   $('#text_' + id).attr('correctedWord', dicData.correctedWord);
   $('#cambridge_' + id).attr('href', cambridgeDic + dicData.correctedWord);
   playAudio(dicData.mp3);
-}
-
-function getDictionaryDataOfWord(text, callback){
-  $.get(dicUrlResult + text, function(dicDataWebContent){
-    var url = $(dicDataWebContent).find('#searchPageResults a:eq(0)').attr('href');
-    var mp3 = $(dicDataWebContent).find('.audio_play_button:eq(0)').attr('data-src-mp3');
-    if(mp3 != undefined){
-      var dicData = getDicDataFromWebContent(text, dicDataWebContent);
-      callback(dicData);
-    } else {
-      $.get(url, function (dicDataWebContent) {
-        var dicData = getDicDataFromWebContent(text, dicDataWebContent);
-        callback(dicData);
-      });
-    }
-  });
 }
 
 function getDicDataFromWebContent(word, dicDataWebContent){

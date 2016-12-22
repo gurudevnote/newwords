@@ -26,6 +26,13 @@ var cambridgeDic = 'http://dictionary.cambridge.org/dictionary/english/';
 var googleTranslateToVn = 'https://translate.google.com/#en/vi/';
 var dynamicTable = null;
 var audios = [];
+function getDictionaryUrlByContry(country) {
+  if(country == 'Uk'){
+    return 'https://en.oxforddictionaries.com/definition/';
+  }else{
+    return 'https://en.oxforddictionaries.com/definition/us/'
+  }
+}
 function stopAudios(){
   _.map(audios, function(audio){
     audio.pause();
@@ -44,7 +51,8 @@ function showDictionaryData(text, dictionary) {
   if (wordObj && wordObj[dictionaryDataKey]) {
     makeSoundAndMeaning(id, wordObj[dictionaryDataKey]);
   } else {
-    $.get(dicUrlResult + text, function (dicResult, textStatus, xhr) {
+    var combineDicUrlResult = dictionary == undefined ? dicUrlResult : getDictionaryUrlByContry(computedDictionary);
+    $.get(combineDicUrlResult + text, function (dicResult, textStatus, xhr) {
       var mp3 = $(dicResult).find('.headwordAudio audio:eq(0)').attr('src');
       if (mp3 != undefined) {
         var dicData = getDicDataFromWebContent(text, dicResult);
@@ -294,7 +302,7 @@ $(function(){
       defaultDictionaryCountry = 'Us';
     }
   });
-  var switchedDictionaryCountry = defaultDictionaryCountry;
+  var switchedDictionaryCountrys = [];
   var hideTimeout = null;
   $(document).keydown(function(event){
     if(event.which=="17" && $('#add').css('display') == 'none') {
@@ -317,13 +325,12 @@ $(function(){
       if(currentSelectedWord == ''){
         return;
       }
-
-      showDictionaryData(currentSelectedWord, switchedDictionaryCountry);
-      if(switchedDictionaryCountry == 'Uk'){
-        switchedDictionaryCountry = 'Us';
+      if(switchedDictionaryCountrys[currentSelectedWord] == 'Uk'){
+        switchedDictionaryCountrys[currentSelectedWord] = 'Us';
       }else{
-        switchedDictionaryCountry = 'Uk';
+        switchedDictionaryCountrys[currentSelectedWord] = 'Uk';
       }
+      showDictionaryData(currentSelectedWord, switchedDictionaryCountrys[currentSelectedWord]);
     }
   });
 

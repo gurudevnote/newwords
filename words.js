@@ -322,11 +322,7 @@ function makeSoundAndMeaning(id, dicData){
   $('#examples_' + id).html(dicData.examplesText);
   $('#text_' + id).attr('correctedWord', dicData.correctedWord);
   $('#cambridge_' + id).attr('href', cambridgeDic + dicData.correctedWord);
-  var audio = new Audio();
-  audio.src = dicData.mp3;
-  stopAudios();
-  audio.play();
-  audios.push(audio);
+  playAudio(dicData.mp3);
 }
 
 function getDictionaryDataOfWord(text, callback){

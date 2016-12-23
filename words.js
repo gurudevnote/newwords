@@ -54,16 +54,13 @@ function showDictionaryData(text, dictionary) {
   } else {
     var combineDicUrlResult = dictionary == undefined ? dicUrlResult : getDictionaryUrlByContry(computedDictionary);
     $.get(combineDicUrlResult + text, function (dicResult, textStatus, xhr) {
-      var mp3 = $(dicResult).find('.headwordAudio audio:eq(0)').attr('src');
-      if (mp3 != undefined) {
-        var dicData = getDicDataFromWebContent(text, dicResult);
-        if (computedDictionary === 'Uk') {
-          StorageApi.setWordUkDictionaryData(text, dicData);
-        } else {
-          StorageApi.setWordUsDictionaryData(text, dicData);
-        }
-        makeSoundAndMeaning(id, dicData);
+      var dicData = getDicDataFromWebContent(text, dicResult);
+      if (computedDictionary === 'Uk') {
+        StorageApi.setWordUkDictionaryData(text, dicData);
+      } else {
+        StorageApi.setWordUsDictionaryData(text, dicData);
       }
+      makeSoundAndMeaning(id, dicData);
     });
   }
 }
@@ -385,9 +382,9 @@ function makeSoundAndMeaning(id, dicData){
 
 function getDicDataFromWebContent(word, dicDataWebContent){
   var dicDataDom = $(dicDataWebContent);
-  var mp3 = dicDataDom.find('.headwordAudio audio:eq(0)').attr('src');
+  var mp3 = dicDataDom.find('.headwordAudio audio:eq(0)').attr('src') || dicDataDom.find('a.speaker audio:eq(0)').attr('src');
   var title = dicDataDom.find('[data-headword-id]:eq(0)').attr('data-headword-id').trim().replace(/\d+/i, '');
-  var phonetic = dicDataDom.find('.phoneticspelling:eq(0)').text();
+  var phonetic = dicDataDom.find('.phoneticspelling:eq(0)').text() || $('.pron.alternative').text();
   phonetic = phonetic.replace('Pronunciation:', title);
   var meaning = dicDataDom.find('.semb .ind:eq(0)').text() + dicDataDom.find('.semb .ex:eq(0)').text();
   var partOfSpeech = _.map(dicDataDom.find('.pos'), function(partOfSpeech){

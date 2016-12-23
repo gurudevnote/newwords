@@ -326,8 +326,12 @@ $(function(){
       }
       if(switchedDictionaryCountrys[currentSelectedWord] == 'Uk'){
         switchedDictionaryCountrys[currentSelectedWord] = 'Us';
-      }else{
+      }
+      else if(switchedDictionaryCountrys[currentSelectedWord] == 'Us'){
         switchedDictionaryCountrys[currentSelectedWord] = 'Uk';
+      }
+      else{
+        switchedDictionaryCountrys[currentSelectedWord] = 'Us';
       }
       showDictionaryData(currentSelectedWord, switchedDictionaryCountrys[currentSelectedWord]);
     }

@@ -182,6 +182,7 @@ $(function(){
         var cambridgeLink = ' <a id="cambridge_'+id+'" target="_blank" word="'+record.text+'" href="'+cambridgeWordLink+'"><image class="cambridge_icon" src="images/cambridge.ico"></a>';
         var textWithLink = "<a google-image='' target='_blank' id='text_" + id
           + "' href='" + dicUrlResult + record.text +"'>" + record.text + "</a>"
+          + '<span id="correctedWord_' + id + '"></span>'
           + cambridgeLink
           + ' <a href="' + googleImagesWeb + record.text + '" target="_blank"><image class="google_icon" src="images/googleg_lodp.ico"></a>'
           + ' <a href="https://translate.google.com/#en/vi/' + record.text + '" target="_blank"><image class="google_icon" src="images/google_translate.ico"></a>'
@@ -380,6 +381,13 @@ function makeSoundAndMeaning(id, dicData){
   $('#meaning_' + id).text(dicData.meaning);
   $('#examples_' + id).html(dicData.examplesText);
   $('#text_' + id).attr('correctedWord', dicData.correctedWord);
+  var inputtedWord = $('#text_' + id).text();
+  if(dicData.correctedWord
+      && dicData.correctedWord != ''
+      && dicData.correctedWord != inputtedWord
+  ){
+    $('#correctedWord_' + id).text(' ' + dicData.correctedWord);
+  }
   $('#cambridge_' + id).attr('href', cambridgeDic + dicData.correctedWord);
   playAudio(dicData.mp3);
 }

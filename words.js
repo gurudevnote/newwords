@@ -395,7 +395,7 @@ function getDicDataFromWebContent(word, dicDataWebContent){
     return $(partOfSpeech).text();
   });
   partOfSpeech =  '(' + _.uniq(partOfSpeech).join(', ') + ')';
-  var examples = _.map(dicDataDom.find('.exg'), function(item){
+  var examples = _.map(dicDataDom.find('.exg .ex'), function(item){
     return $(item).text();
   });
   //var examplesText = examples.join('<br/>');

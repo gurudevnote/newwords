@@ -23,5 +23,6 @@
       "matches": ["*://*/*"],
       "js": ["highlightword.js"]
     }
-  ]
+  ],
+  "content_security_policy": "script-src 'self' https://www.gstatic.com https://*.firebaseio.com; object-src 'self'"
 }

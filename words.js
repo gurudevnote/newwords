@@ -115,10 +115,10 @@ $(function(){
     //console.dir(listWords);
     //add list word to storage
     var listWordsSyn = {};
-    _.map(listWords, function(word){
+    var promises = _.map(listWords, function(word){
       var selectedText = word.toLowerCase();
       var url = '';
-      fireBaseGetWord(selectedText).once('value').then(function(snapshort){
+      return fireBaseGetWord(selectedText).once('value').then(function(snapshort){
         var wordObj = snapshort.val();
         if(wordObj == undefined || wordObj == null) {
           wordObj = {
@@ -132,22 +132,15 @@ $(function(){
           wordObj.date = moment(new Date()).format();
           wordObj.savedCount = (wordObj.savedCount==undefined ? 0 : wordObj.savedCount) + 1;
         }
-        fireBaseGetWord(selectedText).set(wordObj);
-        listWordsSyn[selectedText] = localStorage.getItem(selectedText);
+        return fireBaseGetWord(selectedText).set(wordObj).then(function(){
+          return wordObj;
+        });
       });
     });
 
-    //synch to chrome storage
-    try
-    {
-      chrome.storage.sync.set(listWordsSyn, function(){
-      });
-    }
-    catch(err) {
-
-    }
-
-    window.location.reload();
+    Promise.all(promises).then(function () {
+      window.location.reload();
+    });
   });
 
   wordsRef.once('value', function(snapshot) {

@@ -920,8 +920,20 @@
         var aAttr = (a['dynatable-sortable-text'] && a['dynatable-sortable-text'][attr]) ? a['dynatable-sortable-text'][attr] : a[attr],
             bAttr = (b['dynatable-sortable-text'] && b['dynatable-sortable-text'][attr]) ? b['dynatable-sortable-text'][attr] : b[attr],
             comparison;
-        aAttr = aAttr.toLowerCase();
-        bAttr = bAttr.toLowerCase();
+        if(aAttr == null || aAttr == undefined)
+        {
+          aAttr = null;
+        } else {
+          aAttr = aAttr.toLowerCase();
+        }
+
+        if(bAttr == null || bAttr == undefined)
+        {
+          bAttr = null;
+        } else {
+          bAttr = bAttr.toLowerCase();
+        }
+
         comparison = aAttr === bAttr ? 0 : (direction > 0 ? aAttr > bAttr : bAttr > aAttr);
         // force false boolean value to -1, true to 1, and tie to 0
         return comparison === false ? -1 : (comparison - 0);

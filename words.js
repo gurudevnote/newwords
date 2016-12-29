@@ -118,21 +118,23 @@ $(function(){
     _.map(listWords, function(word){
       var selectedText = word.toLowerCase();
       var url = '';
-      var wordObj = localStorage.getObject(selectedText);
-      if(wordObj == undefined || wordObj == null) {
-        localStorage.setObject(selectedText, {
-          "text": selectedText,
-          "date": new Date(),
-          "url": url,
-          "viewCount": 0,
-          "savedCount": 1
-        });
-      } else {
-        wordObj.date = new Date();
-        wordObj.savedCount = (wordObj.savedCount==undefined ? 0 : wordObj.savedCount) + 1;
-        localStorage.setObject(selectedText, wordObj);
-      }
-      listWordsSyn[selectedText] = localStorage.getItem(selectedText);
+      fireBaseGetWord(selectedText).once('value').then(function(snapshort){
+        var wordObj = snapshort.val();
+        if(wordObj == undefined || wordObj == null) {
+          wordObj = {
+            "text": selectedText,
+            "date":  moment(new Date()).format(),
+            "url": url,
+            "viewCount": 0,
+            "savedCount": 1
+          };
+        } else {
+          wordObj.date = moment(new Date()).format();
+          wordObj.savedCount = (wordObj.savedCount==undefined ? 0 : wordObj.savedCount) + 1;
+        }
+        fireBaseGetWord(selectedText).set(wordObj);
+        listWordsSyn[selectedText] = localStorage.getItem(selectedText);
+      });
     });
 
     //synch to chrome storage

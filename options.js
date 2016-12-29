@@ -24,6 +24,6 @@ $(function(){
 	});
 
 	$("#exportToJson").click(function(){
-		$('#result').html(JSON.stringify(StorageApi.getAllWordFromLocalStorage(),  null, 4));
+		$('#result').html(JSON.stringify({words: StorageApi.getAllWordFromLocalStorage()},  null, 4));
 	});
 });

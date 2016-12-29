@@ -4,10 +4,15 @@ var listeningWords = [];
 var defaultDictionaryCountry = 'Uk';
 var currentSelectedWord = '';
 function updateViewCountToUi(word){
-  var wordObj = StorageApi.updateViewCountToLocalStorage(word);
-  var id = wordObj.text.replace(/\s+/g, '_');
-  $('#viewCount_'+id).html(wordObj.viewCount);
-  return wordObj.viewCount;
+  return fireBaseGetWord(word).once("value").then(function (snapshort) {
+    var wordObj = snapshort.val();
+    wordObj.viewCount = (wordObj.viewCount == undefined ? 0 : wordObj.viewCount) + 1;
+    var id = wordObj.text.replace(/\s+/g, '_');
+    $('#viewCount_'+id).html(wordObj.viewCount);
+    return fireBaseGetWord(word).set(wordObj).then(function () {
+      return wordObj.viewCount;
+    });
+  });
 }
 
 $.ajaxPrefilter(function( options, originalOptions ) {
@@ -221,14 +226,15 @@ $(function(){
 
   $('body').on('click', "a[id^=text_]", function () {
     var text =($(this).text());
-    var viewCount = updateViewCountToUi(text);
-    dynamicTable.settings.dataset.originalRecords = _.map(dynamicTable.settings.dataset.originalRecords, function(it){
-      if(it.text == text){
-        it.viewCount = viewCount;
-      }
-      return it;
+    updateViewCountToUi(text).then(function(viewCount){
+      dynamicTable.settings.dataset.originalRecords = _.map(dynamicTable.settings.dataset.originalRecords, function(it){
+        if(it.text == text){
+          it.viewCount = viewCount;
+        }
+        return it;
+      });
+      dynamicTable.process();
     });
-    dynamicTable.process();
   });
 
   function displayGoogleImages(listImages, callback) {

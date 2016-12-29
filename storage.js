@@ -57,7 +57,7 @@ StorageApi.getAllWordForDisplayingOnCalendar = function(datas){
 	return _.map(datas, function(item){
 		return {
 	    	title: item.text,
-	    	start: item.date
+	    	start: item.date || new Date()
 	  	};
 	});
 };

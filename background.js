@@ -18,38 +18,40 @@ chrome.contextMenus.onClicked.addListener(onClickHandler);
 function onClickHandler(info, tab) {
   var selectedText = info.selectionText.toLowerCase();
   var url = tab.url;
-  var wordObj = localStorage.getObject(selectedText);
-  var urls = wordObj && wordObj.urls || [];
+  fireBaseGetWord(selectedText).once('value', function (snapshort) {
+    wordObj = snapshort.val();
+    var urls = wordObj && wordObj.urls || [];
 
-  if(canAddStringToArray(url, urls))
-  {
-    urls.push(url);
-  }
-
-  if(wordObj && wordObj.url) {
-    if(canAddStringToArray(wordObj.url, urls))
+    if(canAddStringToArray(url, urls))
     {
-      urls.push(wordObj.url);
+      urls.push(url);
     }
-  }
 
-  if(wordObj == undefined || wordObj == null) {
-    localStorage.setObject(selectedText, {
-      "text": selectedText,
-      "date": new Date(),
-      "url" : url,
-      "urls": urls,
-      "viewCount": 0,
-      "savedCount": 1
-    });
-  } else {
-    wordObj.date = new Date();
-    wordObj.savedCount = (wordObj.savedCount==undefined ? 0 : wordObj.savedCount) + 1;
-    wordObj.url = url;
-    wordObj.urls = urls;
-    localStorage.setObject(selectedText, wordObj);
-  }
-  chrome.browserAction.setBadgeText({text: localStorage.length + ''});
+    if(wordObj && wordObj.url) {
+      if(canAddStringToArray(wordObj.url, urls))
+      {
+        urls.push(wordObj.url);
+      }
+    }
+    var dataStr = moment(new Date()).format();
+    if(wordObj == undefined || wordObj == null) {
+      wordObj = {
+        "text": selectedText,
+        "date": dataStr,
+        "url" : url,
+        "urls": urls,
+        "viewCount": 0,
+        "savedCount": 1
+      }
+    } else {
+      wordObj.date = dataStr;
+      wordObj.savedCount = (wordObj.savedCount==undefined ? 0 : wordObj.savedCount) + 1;
+      wordObj.url = url;
+      wordObj.urls = urls;
+    }
+    chrome.browserAction.setBadgeText({text: localStorage.length + ''});
+    fireBaseGetWord(selectedText).set(wordObj);
+  });
 };
 
 function canAddStringToArray(str, arr){

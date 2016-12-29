@@ -356,7 +356,10 @@ $(function(){
             if(key == 'delete') {
               if(confirm('Are you sure to remove the word: ' + word)){
                 localStorage.removeItem(word);
-                window.location.reload();
+
+                fireBaseGetWord(word).remove().then(function () {
+                  window.location.reload();
+                });
               }
             } else if(key == 'listen') {
               //add words to listening list

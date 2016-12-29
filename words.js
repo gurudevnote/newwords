@@ -3,8 +3,6 @@ var events = [];
 var listeningWords = [];
 var defaultDictionaryCountry = 'Uk';
 var currentSelectedWord = '';
-datas = StorageApi.getAllWordFromLocalStorage();
-events = StorageApi.getAllWordForDisplayingOnCalendar(datas);
 function updateViewCountToUi(word){
   var wordObj = StorageApi.updateViewCountToLocalStorage(word);
   var id = wordObj.text.replace(/\s+/g, '_');
@@ -145,55 +143,81 @@ $(function(){
     window.location.reload();
   });
 
-
-
-  dynamicTable = $('#my-final-table').dynatable({
-    dataset: {
-      records: datas
-    },
-    writers: {
-      _rowWriter: function(rowIndex, record, columns, cellWriter) {
-        var tdClass = '';
-        if(_.includes(listeningWords, record.text.toLowerCase())) {
-          tdClass = 'listening'
-        }
-        var id = record.text.replace(/\s+/g, '_');
-        var source = '<td>&nbsp;</td>';
-        var savedCount = '<td>&nbsp;</td>';
-        var viewCount = '<td id="viewCount_' + id + '">&nbsp;</td>';
-        //var action = '<td><a class="action" word="'+ record.text +'" href="#">delete</a></td>';
-        var action = '<td><span class="action" word="'+ record.text +'"><i class="material-icons">more_vert</i></span></td>';
-        if(record.urls) {
-          if(record.urls.length == 1){
-            source = '<td><a target="_blank" href="' + record.urls[0] + '#__highlightword=' + record.text +'">source</a></td>';
-          } else {
-            source = '<td><a target="_blank" href="sources.html?word='+ record.text +'">sources</a>('+record.urls.length+')</td>';
+  wordsRef.once('value', function(snapshot) {
+    var words = [];
+    snapshot.forEach(function(childSnapshot) {
+      words.push(childSnapshot.val());
+    });
+    datas = words;
+    events = StorageApi.getAllWordForDisplayingOnCalendar(datas);
+    dynamicTable = $('#my-final-table').dynatable({
+      dataset: {
+        records: datas
+      },
+      writers: {
+        _rowWriter: function(rowIndex, record, columns, cellWriter) {
+          var tdClass = '';
+          if(_.includes(listeningWords, record.text.toLowerCase())) {
+            tdClass = 'listening'
           }
-        } else if(record.url) {
-          source = '<td><a target="_blank" href="' + record.url + '#__highlightword=' + record.text +'">source</a></td>';
+          var id = record.text.replace(/\s+/g, '_');
+          var source = '<td>&nbsp;</td>';
+          var savedCount = '<td>&nbsp;</td>';
+          var viewCount = '<td id="viewCount_' + id + '">&nbsp;</td>';
+          //var action = '<td><a class="action" word="'+ record.text +'" href="#">delete</a></td>';
+          var action = '<td><span class="action" word="'+ record.text +'"><i class="material-icons">more_vert</i></span></td>';
+          if(record.urls) {
+            if(record.urls.length == 1){
+              source = '<td><a target="_blank" href="' + record.urls[0] + '#__highlightword=' + record.text +'">source</a></td>';
+            } else {
+              source = '<td><a target="_blank" href="sources.html?word='+ record.text +'">sources</a>('+record.urls.length+')</td>';
+            }
+          } else if(record.url) {
+            source = '<td><a target="_blank" href="' + record.url + '#__highlightword=' + record.text +'">source</a></td>';
+          }
+          if(record.savedCount) {
+            savedCount = '<td>' + record.savedCount + '</td>';
+          }
+          if(record.viewCount) {
+            viewCount = '<td id="viewCount_' + id + '">' + record.viewCount + '</td>';
+          }
+          var cambridgeWordLink = cambridgeDic + record.text;
+          var cambridgeLink = ' <a id="cambridge_'+id+'" target="_blank" word="'+record.text+'" href="'+cambridgeWordLink+'"><image class="cambridge_icon" src="images/cambridge.ico"></a>';
+          var textWithLink = "<a google-image='' target='_blank' id='text_" + id
+              + "' href='" + dicUrlResult + record.text +"'>" + record.text + "</a>"
+              + '<span id="correctedWord_' + id + '"></span>'
+              + cambridgeLink
+              + ' <a href="' + googleImagesWeb + record.text + '" target="_blank"><image class="google_icon" src="images/googleg_lodp.ico"></a>'
+              + ' <a href="https://translate.google.com/#en/vi/' + record.text + '" target="_blank"><image class="google_icon" src="images/google_translate.ico"></a>'
+              + '<a href="' + ludwigUrl + record.text + '" target="_blank"><image class="ludwig_icon" src="images/ludwig.ico" /></a>'
+              + "<span class='correctedWord' id='phonetic_" + id + "'></span><span id='wordType_" + id + "'></span>"
+              + "<span class='correctedWord' id='translate_" + id + "'></span>"
+              + "<br/> <span id='meaning_" + id + "'></span><span class='examples' id='examples_" + id + "'></span>";
+          return '<tr class="' + tdClass + '"><td style="text-align: left;">' + textWithLink + '</td><td style="text-align: left;">' + record.date + '</td>' + savedCount + viewCount + source + action + '</tr>';
         }
-        if(record.savedCount) {
-          savedCount = '<td>' + record.savedCount + '</td>';
-        }
-        if(record.viewCount) {
-          viewCount = '<td id="viewCount_' + id + '">' + record.viewCount + '</td>';
-        }
-        var cambridgeWordLink = cambridgeDic + record.text;
-        var cambridgeLink = ' <a id="cambridge_'+id+'" target="_blank" word="'+record.text+'" href="'+cambridgeWordLink+'"><image class="cambridge_icon" src="images/cambridge.ico"></a>';
-        var textWithLink = "<a google-image='' target='_blank' id='text_" + id
-          + "' href='" + dicUrlResult + record.text +"'>" + record.text + "</a>"
-          + '<span id="correctedWord_' + id + '"></span>'
-          + cambridgeLink
-          + ' <a href="' + googleImagesWeb + record.text + '" target="_blank"><image class="google_icon" src="images/googleg_lodp.ico"></a>'
-          + ' <a href="https://translate.google.com/#en/vi/' + record.text + '" target="_blank"><image class="google_icon" src="images/google_translate.ico"></a>'
-          + '<a href="' + ludwigUrl + record.text + '" target="_blank"><image class="ludwig_icon" src="images/ludwig.ico" /></a>'
-          + "<span class='correctedWord' id='phonetic_" + id + "'></span><span id='wordType_" + id + "'></span>"
-          + "<span class='correctedWord' id='translate_" + id + "'></span>"
-          + "<br/> <span id='meaning_" + id + "'></span><span class='examples' id='examples_" + id + "'></span>";
-        return '<tr class="' + tdClass + '"><td style="text-align: left;">' + textWithLink + '</td><td style="text-align: left;">' + record.date + '</td>' + savedCount + viewCount + source + action + '</tr>';
+      },
+    }).data('dynatable');
+
+    dynamicTable.queries.functions['hideDate'] = function(record, queryValue) {
+      return queryValue == record.hideDate;
+    };
+
+    $('#calendar').fullCalendar({
+      header: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'month,agendaWeek,agendaDay'
+      },
+      defaultDate: moment().format('YYYY-MM-DD'),
+      editable: false,
+      eventLimit: true, // allow "more" link when too many events
+      events: events,
+      dayClick: function(date, jsEvent, view) {
+        dynamicTable.queries.add("hideDate",date.format('YYYY-MM-DD'));
+        dynamicTable.process();
       }
-    },
-  }).data('dynatable');
+    });
+  });
 
   $('body').on('click', "a[id^=text_]", function () {
     var text =($(this).text());
@@ -205,26 +229,6 @@ $(function(){
       return it;
     });
     dynamicTable.process();
-  });
-
-  dynamicTable.queries.functions['hideDate'] = function(record, queryValue) {
-      return queryValue == record.hideDate;
-  };
-
-  $('#calendar').fullCalendar({
-    header: {
-      left: 'prev,next today',
-      center: 'title',
-      right: 'month,agendaWeek,agendaDay'
-    },
-    defaultDate: moment().format('YYYY-MM-DD'),
-    editable: false,
-    eventLimit: true, // allow "more" link when too many events
-    events: events,
-    dayClick: function(date, jsEvent, view) {
-      dynamicTable.queries.add("hideDate",date.format('YYYY-MM-DD'));
-      dynamicTable.process();
-    }
   });
 
   function displayGoogleImages(listImages, callback) {

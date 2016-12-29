@@ -31,8 +31,7 @@ function synchronizeChrome(){
 
 StorageApi.getAllWordFromLocalStorage = function(){
 	var wordCount = localStorage.length;
-	var datas = [];
-	var events = [];
+	var datas = {};
 	for(i = 0; i < wordCount; i++) {
 	  var key = localStorage.key(i);
 	  var wordObj = localStorage.getObject(key);
@@ -45,13 +44,10 @@ StorageApi.getAllWordFromLocalStorage = function(){
 	  if(wordObj.savedCount == undefined || wordObj.savedCount == null) {
 	    wordObj.savedCount = 0;
 	  }
-	  datas.push(wordObj);	  
+	  datas[key] = wordObj;
 	}
 
-	var now = moment();
-	return _.sortBy(datas, function(item){
-	  return now - item.date;
-	});
+	return datas;
 };
 
 StorageApi.getAllWordForDisplayingOnCalendar = function(datas){

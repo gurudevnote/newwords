@@ -83,4 +83,14 @@ StorageApi.setTranslateFromEnglishToVn = function(word, translatedWord){
 		fireBaseGetWordRef(word).set(wordObj);
 		return wordObj;
 	});
+};
+
+StorageApi.clearWordDictionaryData = function (word) {
+	return fireBaseGetWordContent(word).then(function(snapshort){
+		var wordObj = snapshort.val();
+		delete wordObj.translateFromEnglishToVn;
+		delete wordObj.wordUsDictionaryData;
+		delete wordObj.wordUkDictionaryData;
+		return fireBaseGetWordRef(word).set(wordObj);
+	});
 }

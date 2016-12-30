@@ -16,10 +16,12 @@ function updateViewCountToUi(word){
 }
 
 $.ajaxPrefilter(function( options, originalOptions ) {
-  options.url = "http://localhost:3000/?url=" + encodeURIComponent( originalOptions.url );
+  if(originalOptions.url.indexOf('http://localhost:3000/')){
+    options.url = "http://localhost:3000/?url=" + encodeURIComponent( originalOptions.url );
+  }
 });
 
-
+var urlClear = "http://localhost:3000/remove_caches?url=";
 var dicUrl = "https://en.oxforddictionaries.com/definition/";
 //var dicUrlResult = 'https://en.oxforddictionaries.com/search?utf8=%E2%9C%93&filter=dictionary&query=';
 var dicUrlResult = dicUrl;
@@ -53,7 +55,7 @@ function showDictionaryData(text, dictionary) {
     var wordObj = snapshort.val();
     var computedDictionary = dictionary == undefined ? defaultDictionaryCountry : dictionary;
     var dictionaryDataKey = 'word' + computedDictionary + 'DictionaryData';
-    if (wordObj && wordObj[dictionaryDataKey]) {
+    if (wordObj && wordObj[dictionaryDataKey] && wordObj[dictionaryDataKey] != null) {
       makeSoundAndMeaning(id, wordObj[dictionaryDataKey]);
     } else {
       var combineDicUrlResult = dictionary == undefined ? dicUrlResult : getDictionaryUrlByContry(computedDictionary);
@@ -85,6 +87,9 @@ function showTranslateFromEnglishToVn(word) {
   });
 }
 
+function getGoogleImageWebOfWord(text) {
+  return googleImagesWeb + text;
+}
 $(function(){
   $('button#showAddForm').click(function(){
     $(this).hide();
@@ -152,7 +157,13 @@ $(function(){
     snapshot.forEach(function(childSnapshot) {
       words.push(childSnapshot.val());
     });
+
     datas = words;
+    var now = moment();
+    datas = _.sortBy(datas, function(item){
+      return now - item.date;
+    });
+
     events = StorageApi.getAllWordForDisplayingOnCalendar(datas);
     dynamicTable = $('#my-final-table').dynatable({
       dataset: {
@@ -261,7 +272,7 @@ $(function(){
           }
           else
           {
-            $.get(googleImagesWeb + text, function(data){
+            $.get(getGoogleImageWebOfWord(text), function(data){
               var listImages = $.map($(data).find('[data-src^=http]'),function(item){
                 var linkData = $(item).parent().attr('href');
                 var result = {url: '', realUrl: '', refUrl: ''};
@@ -372,11 +383,12 @@ $(function(){
                 addSoundOfWordToPlaylist(wordObj[dictionaryDataKey]);
               }
             } else if(key == 'clear images'){
-              StorageApi.setWordGoogleImages(word, undefined);
+              StorageApi.setWordGoogleImages(word, null);
+              $.get(urlClear + encodeURIComponent(getGoogleImageWebOfWord(word)));
             } else if(key == 'clear dictionary data'){
-              StorageApi.setWordDictionaryData(word, undefined);
-              StorageApi.setWordUkDictionaryData(word, undefined);
-              StorageApi.setWordUsDictionaryData(word, undefined);
+              $.get(urlClear + encodeURIComponent(getDictionaryUrlByContry('Uk') + word));
+              $.get(urlClear + encodeURIComponent(getDictionaryUrlByContry('Us') + word));
+              StorageApi.clearWordDictionaryData(word);
             }
         },
         items: {

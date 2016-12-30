@@ -4,12 +4,12 @@ var listeningWords = [];
 var defaultDictionaryCountry = 'Uk';
 var currentSelectedWord = '';
 function updateViewCountToUi(word){
-  return fireBaseGetWord(word).once("value").then(function (snapshort) {
+  return fireBaseGetWordRef(word).once("value").then(function (snapshort) {
     var wordObj = snapshort.val();
     wordObj.viewCount = (wordObj.viewCount == undefined ? 0 : wordObj.viewCount) + 1;
     var id = wordObj.text.replace(/\s+/g, '_');
     $('#viewCount_'+id).html(wordObj.viewCount);
-    return fireBaseGetWord(word).set(wordObj).then(function () {
+    return fireBaseGetWordRef(word).set(wordObj).then(function () {
       return wordObj.viewCount;
     });
   });
@@ -118,7 +118,7 @@ $(function(){
     var promises = _.map(listWords, function(word){
       var selectedText = word.toLowerCase();
       var url = '';
-      return fireBaseGetWord(selectedText).once('value').then(function(snapshort){
+      return fireBaseGetWordRef(selectedText).once('value').then(function(snapshort){
         var wordObj = snapshort.val();
         if(wordObj == undefined || wordObj == null) {
           wordObj = {
@@ -132,7 +132,7 @@ $(function(){
           wordObj.date = moment(new Date()).format();
           wordObj.savedCount = (wordObj.savedCount==undefined ? 0 : wordObj.savedCount) + 1;
         }
-        return fireBaseGetWord(selectedText).set(wordObj).then(function(){
+        return fireBaseGetWordRef(selectedText).set(wordObj).then(function(){
           return wordObj;
         });
       });
@@ -352,7 +352,7 @@ $(function(){
               if(confirm('Are you sure to remove the word: ' + word)){
                 localStorage.removeItem(word);
 
-                fireBaseGetWord(word).remove().then(function () {
+                fireBaseGetWordRef(word).remove().then(function () {
                   window.location.reload();
                 });
               }

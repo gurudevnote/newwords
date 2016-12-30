@@ -18,7 +18,7 @@ chrome.contextMenus.onClicked.addListener(onClickHandler);
 function onClickHandler(info, tab) {
   var selectedText = info.selectionText.toLowerCase();
   var url = tab.url;
-  fireBaseGetWord(selectedText).once('value', function (snapshort) {
+  fireBaseGetWordRef(selectedText).once('value', function (snapshort) {
     wordObj = snapshort.val();
     var urls = wordObj && wordObj.urls || [];
 
@@ -50,7 +50,7 @@ function onClickHandler(info, tab) {
       wordObj.urls = urls;
     }
     chrome.browserAction.setBadgeText({text: localStorage.length + ''});
-    fireBaseGetWord(selectedText).set(wordObj);
+    fireBaseGetWordRef(selectedText).set(wordObj);
   });
 };
 

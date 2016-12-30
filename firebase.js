@@ -8,6 +8,6 @@ var fireBaseConfig = {
 };
 firebase.initializeApp(fireBaseConfig);
 var wordsRef = firebase.database().ref('words');
-function fireBaseGetWord(word) {
+function fireBaseGetWordRef(word) {
     return firebase.database().ref('words/' + word);
 }

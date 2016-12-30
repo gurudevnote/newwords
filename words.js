@@ -377,11 +377,14 @@ $(function(){
               //add words to listening list
               listeningWords.push(word);
               $(this['context']).closest('tr').addClass('listening');
-              var wordObj = StorageApi.getWord(word);
-              var dictionaryDataKey = 'word' + defaultDictionaryCountry + 'DictionaryData';
-              if(wordObj && wordObj[dictionaryDataKey]){
-                addSoundOfWordToPlaylist(wordObj[dictionaryDataKey]);
-              }
+              fireBaseGetWordContent(word).then(function (snapshort) {
+                var wordObj = snapshort.val();
+                var dictionaryDataKey = 'word' + defaultDictionaryCountry + 'DictionaryData';
+                if(wordObj && wordObj[dictionaryDataKey]){
+                  addSoundOfWordToPlaylist(wordObj[dictionaryDataKey]);
+                  makeSoundAndMeaning(getWordIdfromWord(word), wordObj[dictionaryDataKey]);
+                }
+              });
             } else if(key == 'clear images'){
               StorageApi.setWordGoogleImages(word, null);
               $.get(urlClear + encodeURIComponent(getGoogleImageWebOfWord(word)));

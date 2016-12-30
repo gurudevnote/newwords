@@ -49,36 +49,40 @@ function getWordIdfromWord(text) {
 function showDictionaryData(text, dictionary) {
   currentSelectedWord = text;
   var id = getWordIdfromWord(text);
-  var wordObj = StorageApi.getWord(text);
-  var computedDictionary = dictionary == undefined ? defaultDictionaryCountry : dictionary;
-  var dictionaryDataKey = 'word' + computedDictionary + 'DictionaryData';
-  if (wordObj && wordObj[dictionaryDataKey]) {
-    makeSoundAndMeaning(id, wordObj[dictionaryDataKey]);
-  } else {
-    var combineDicUrlResult = dictionary == undefined ? dicUrlResult : getDictionaryUrlByContry(computedDictionary);
-    $.get(combineDicUrlResult + text, function (dicResult, textStatus, xhr) {
-      var dicData = getDicDataFromWebContent(text, dicResult);
-      if (computedDictionary === 'Uk') {
-        StorageApi.setWordUkDictionaryData(text, dicData);
-      } else {
-        StorageApi.setWordUsDictionaryData(text, dicData);
-      }
-      makeSoundAndMeaning(id, dicData);
-    });
-  }
+  fireBaseGetWordContent(text).then(function(snapshort) {
+    var wordObj = snapshort.val();
+    var computedDictionary = dictionary == undefined ? defaultDictionaryCountry : dictionary;
+    var dictionaryDataKey = 'word' + computedDictionary + 'DictionaryData';
+    if (wordObj && wordObj[dictionaryDataKey]) {
+      makeSoundAndMeaning(id, wordObj[dictionaryDataKey]);
+    } else {
+      var combineDicUrlResult = dictionary == undefined ? dicUrlResult : getDictionaryUrlByContry(computedDictionary);
+      $.get(combineDicUrlResult + text, function (dicResult, textStatus, xhr) {
+        var dicData = getDicDataFromWebContent(text, dicResult);
+        if (computedDictionary === 'Uk') {
+          StorageApi.setWordUkDictionaryData(text, dicData);
+        } else {
+          StorageApi.setWordUsDictionaryData(text, dicData);
+        }
+        makeSoundAndMeaning(id, dicData);
+      });
+    }
+  });
 }
 
 function showTranslateFromEnglishToVn(word) {
-  var wordObj = StorageApi.getWord(word);
-  if(wordObj && wordObj.translateFromEnglishToVn){
-    $('#translate_' + getWordIdfromWord(word)).text(wordObj.translateFromEnglishToVn);
-  } else {
-    $.get(googleTranslateToVn + word, function (googleTranslateResult) {
-      var translateText = $(googleTranslateResult).find('#result_box').text();
-      StorageApi.setTranslateFromEnglishToVn(word, translateText);
-      $('#translate_' + getWordIdfromWord(word)).text(translateText);
-    });
-  }
+  fireBaseGetWordContent(word).then(function(snapshort) {
+    var wordObj = snapshort.val();
+    if (wordObj && wordObj.translateFromEnglishToVn) {
+      $('#translate_' + getWordIdfromWord(word)).text(wordObj.translateFromEnglishToVn);
+    } else {
+      $.get(googleTranslateToVn + word, function (googleTranslateResult) {
+        var translateText = $(googleTranslateResult).find('#result_box').text();
+        StorageApi.setTranslateFromEnglishToVn(word, translateText);
+        $('#translate_' + getWordIdfromWord(word)).text(translateText);
+      });
+    }
+  });
 }
 
 $(function(){
@@ -249,36 +253,38 @@ $(function(){
       tooltipClass: 'images-tooltip',
       content: function(callback){
         var text =($(this).text());
-        var wordObj = StorageApi.getWord(text);
-        if(wordObj && wordObj.googleImages && wordObj.googleImages.length > 0){
-          var listImages = wordObj.googleImages;
-          displayGoogleImages(listImages, callback);
-        }
-        else
-        {
-          $.get(googleImagesWeb + text, function(data){
-            var listImages = $.map($(data).find('[data-src^=http]'),function(item){
-              var linkData = $(item).parent().attr('href');
-              var result = {url: '', realUrl: '', refUrl: ''};
-              try {
-                result = {
-                  url: $(item).attr('data-src'),
-                  realUrl: decodeURIComponent(/\/imgres\?imgurl=([^&]+)/.exec(linkData)[1]),
-                  refUrl: decodeURIComponent(/&imgrefurl=([^&]+)/.exec(linkData)[1])
-                };
-              } catch (e) {
-
-              } finally {
-
-              }
-
-              return result;
-            });
-
-            StorageApi.setWordGoogleImages(text, listImages);
+        fireBaseGetWordContent(text).then(function(snapshort){
+          var wordObj = snapshort.val();
+          if(wordObj && wordObj.googleImages && wordObj.googleImages.length > 0){
+            var listImages = wordObj.googleImages;
             displayGoogleImages(listImages, callback);
-          });
-        }
+          }
+          else
+          {
+            $.get(googleImagesWeb + text, function(data){
+              var listImages = $.map($(data).find('[data-src^=http]'),function(item){
+                var linkData = $(item).parent().attr('href');
+                var result = {url: '', realUrl: '', refUrl: ''};
+                try {
+                  result = {
+                    url: $(item).attr('data-src'),
+                    realUrl: decodeURIComponent(/\/imgres\?imgurl=([^&]+)/.exec(linkData)[1]),
+                    refUrl: decodeURIComponent(/&imgrefurl=([^&]+)/.exec(linkData)[1])
+                  };
+                } catch (e) {
+
+                } finally {
+
+                }
+
+                return result;
+              });
+
+              StorageApi.setWordGoogleImages(text, listImages);
+              displayGoogleImages(listImages, callback);
+            });
+          }
+        });
       },
       position: {
         my: "left top+15",

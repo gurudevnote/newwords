@@ -11,3 +11,7 @@ var wordsRef = firebase.database().ref('words');
 function fireBaseGetWordRef(word) {
     return firebase.database().ref('words/' + word);
 }
+
+function fireBaseGetWordContent(word) {
+    return firebase.database().ref('words/' + word).once('value');
+}

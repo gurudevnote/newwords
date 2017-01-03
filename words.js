@@ -155,7 +155,11 @@ $(function(){
   wordsRef.once('value', function(snapshot) {
     var words = [];
     snapshot.forEach(function(childSnapshot) {
-      words.push(childSnapshot.val());
+      var word = childSnapshot.val();
+      words.push(word);
+      if(!word.hideDate){
+        word.hideDate = moment(word.date).format('YYYY-MM-DD');
+      }
     });
 
     datas = words;

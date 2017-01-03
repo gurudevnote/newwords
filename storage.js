@@ -21,6 +21,32 @@ StorageApi.getAllWordFromLocalStorage = function(){
 	return datas;
 };
 
+StorageApi.getAllWords = function(){
+	return wordsRef.once('value').then(function (snapshort) {
+		var words = {};
+		var dictionary = {};
+		snapshort.forEach(function(childSnapshot) {
+			var key = childSnapshot.getKey();
+			var wordObj = childSnapshot.val();
+			words[key] = wordObj;
+			dictionary[key] = {
+				translateFromEnglishToVn : wordObj.translateFromEnglishToVn,
+				wordUsDictionaryData: wordObj.wordUsDictionaryData,
+				wordUkDictionaryData: wordObj.wordUkDictionaryData,
+				googleImages: wordObj.googleImages
+			}
+
+			wordObj.translateFromEnglishToVn = undefined;
+			wordObj.wordUsDictionaryData = undefined;
+			wordObj.wordUkDictionaryData = undefined;
+			wordObj.wordDictionaryData = undefined;
+			wordObj.googleImages = undefined;
+		});
+
+		return {words: words, dictionary: dictionary}
+	});
+};
+
 StorageApi.getAllWordForDisplayingOnCalendar = function(datas){
 	if(datas == undefined || datas == null) {
 		datas = this.getAllWordFromLocalStorage();
@@ -41,56 +67,56 @@ StorageApi.updateViewCountToLocalStorage = function(word){
 };
 
 StorageApi.setWordGoogleImages = function (word, googleImages) {
-	return fireBaseGetWordContent(word).then(function(snapshort){
-		var wordObj = snapshort.val();
+	return fireBaseGetWordDictionary(word).then(function(snapshort){
+		var wordObj = snapshort.val() || {};
 		wordObj.googleImages = googleImages;
-		fireBaseGetWordRef(word).set(wordObj);
+		fireBaseGetWordDictionaryRef(word).set(wordObj);
 		return wordObj;
 	});
 };
 
 StorageApi.setWordDictionaryData = function (word, wordDictionaryData) {
-	return fireBaseGetWordContent(word).then(function(snapshort){
-		var wordObj = snapshort.val();
+	return fireBaseGetWordDictionary(word).then(function(snapshort){
+		var wordObj = snapshort.val()  || {};
 		wordObj.wordDictionaryData = wordDictionaryData;
-		fireBaseGetWordRef(word).set(wordObj);
+		fireBaseGetWordDictionaryRef(word).set(wordObj);
 		return wordObj;
 	});
 };
 
 StorageApi.setWordUkDictionaryData = function (word, wordDictionaryData) {
-	return fireBaseGetWordContent(word).then(function(snapshort){
-		var wordObj = snapshort.val();
+	return fireBaseGetWordDictionary(word).then(function(snapshort){
+		var wordObj = snapshort.val()  || {};
 		wordObj.wordUkDictionaryData = wordDictionaryData;
-		fireBaseGetWordRef(word).set(wordObj);
+		fireBaseGetWordDictionaryRef(word).set(wordObj);
 		return wordObj;
 	});
 };
 
 StorageApi.setWordUsDictionaryData = function (word, wordDictionaryData) {
-	return fireBaseGetWordContent(word).then(function(snapshort){
-		var wordObj = snapshort.val();
+	return fireBaseGetWordDictionary(word).then(function(snapshort){
+		var wordObj = snapshort.val()  || {};
 		wordObj.wordUsDictionaryData = wordDictionaryData;
-		fireBaseGetWordRef(word).set(wordObj);
+		fireBaseGetWordDictionaryRef(word).set(wordObj);
 		return wordObj;
 	});
 };
 
 StorageApi.setTranslateFromEnglishToVn = function(word, translatedWord){
-	return fireBaseGetWordContent(word).then(function(snapshort){
-		var wordObj = snapshort.val();
+	return fireBaseGetWordDictionary(word).then(function(snapshort){
+		var wordObj = snapshort.val()  || {};
 		wordObj.translateFromEnglishToVn = translatedWord;
-		fireBaseGetWordRef(word).set(wordObj);
+		fireBaseGetWordDictionaryRef(word).set(wordObj);
 		return wordObj;
 	});
 };
 
 StorageApi.clearWordDictionaryData = function (word) {
-	return fireBaseGetWordContent(word).then(function(snapshort){
-		var wordObj = snapshort.val();
+	return fireBaseGetWordDictionary(word).then(function(snapshort){
+		var wordObj = snapshort.val()  || {};
 		delete wordObj.translateFromEnglishToVn;
 		delete wordObj.wordUsDictionaryData;
 		delete wordObj.wordUkDictionaryData;
-		return fireBaseGetWordRef(word).set(wordObj);
+		return fireBaseGetWordDictionaryRef(word).set(wordObj);
 	});
 }

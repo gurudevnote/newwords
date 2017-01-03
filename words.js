@@ -51,7 +51,7 @@ function getWordIdfromWord(text) {
 function showDictionaryData(text, dictionary) {
   currentSelectedWord = text;
   var id = getWordIdfromWord(text);
-  fireBaseGetWordContent(text).then(function(snapshort) {
+  fireBaseGetWordDictionary(text).then(function(snapshort) {
     var wordObj = snapshort.val();
     var computedDictionary = dictionary == undefined ? defaultDictionaryCountry : dictionary;
     var dictionaryDataKey = 'word' + computedDictionary + 'DictionaryData';
@@ -73,7 +73,7 @@ function showDictionaryData(text, dictionary) {
 }
 
 function showTranslateFromEnglishToVn(word) {
-  fireBaseGetWordContent(word).then(function(snapshort) {
+  fireBaseGetWordDictionary(word).then(function(snapshort) {
     var wordObj = snapshort.val();
     if (wordObj && wordObj.translateFromEnglishToVn) {
       $('#translate_' + getWordIdfromWord(word)).text(wordObj.translateFromEnglishToVn);
@@ -264,7 +264,7 @@ $(function(){
       tooltipClass: 'images-tooltip',
       content: function(callback){
         var text =($(this).text());
-        fireBaseGetWordContent(text).then(function(snapshort){
+        fireBaseGetWordDictionary(text).then(function(snapshort){
           var wordObj = snapshort.val();
           if(wordObj && wordObj.googleImages && wordObj.googleImages.length > 0){
             var listImages = wordObj.googleImages;
@@ -377,7 +377,7 @@ $(function(){
               //add words to listening list
               listeningWords.push(word);
               $(this['context']).closest('tr').addClass('listening');
-              fireBaseGetWordContent(word).then(function (snapshort) {
+              fireBaseGetWordDictionary(word).then(function (snapshort) {
                 var wordObj = snapshort.val();
                 var dictionaryDataKey = 'word' + defaultDictionaryCountry + 'DictionaryData';
                 if(wordObj && wordObj[dictionaryDataKey]){

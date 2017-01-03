@@ -15,3 +15,11 @@ function fireBaseGetWordRef(word) {
 function fireBaseGetWordContent(word) {
     return firebase.database().ref('words/' + word).once('value');
 }
+
+function fireBaseGetWordDictionary(word) {
+    return firebase.database().ref('dictionary/' + word).once('value');
+}
+
+function fireBaseGetWordDictionaryRef(word) {
+    return firebase.database().ref('dictionary/' + word);
+}

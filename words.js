@@ -201,11 +201,11 @@ $(function(){
             viewCount = '<td id="viewCount_' + id + '">' + record.viewCount + '</td>';
           }
           var cambridgeWordLink = cambridgeDic + record.text;
-          var oxfordWordLink = dicUrl + record.text;
+          var oxfordWordLink = dicUrlResult + record.text;
           var cambridgeLink = ' <a id="cambridge_'+id+'" target="_blank" word="'+record.text+'" href="'+cambridgeWordLink+'"><image class="cambridge_icon" src="images/cambridge.ico"></a>';
           var oxfordLink = ' <a id="oxford_'+id+'" target="_blank" word="'+record.text+'" href="'+oxfordWordLink+'"><image class="oxford_icon" src="images/oxforddictionary.ico"></a>';
-          var textWithLink = "<a google-image='' target='_blank' id='text_" + id
-              + "' href='" + dicUrlResult + record.text +"'>" + record.text + "</a>"
+          var textWithLink = "<span class='word_hover' google-image='' target='_blank' id='text_" + id + "'"
+              + ">" + record.text + "</span>"
               + '<span id="correctedWord_' + id + '"></span>'
               + oxfordLink
               + cambridgeLink
@@ -316,7 +316,7 @@ $(function(){
     window.open(dicUrlResult + text);
   });
 
-  $('body').on('mouseover', "span.fc-title, a[id^=text_]", function () {
+  $('body').on('mouseover', "span.fc-title, span[id^=text_]", function () {
     showDictionaryData($(this).text());
     showTranslateFromEnglishToVn($(this).text());
   });
@@ -390,7 +390,11 @@ $(function(){
                 if(wordObj && wordObj[dictionaryDataKey]){
                   addSoundOfWordToPlaylist(wordObj[dictionaryDataKey]);
                   makeSoundAndMeaning(getWordIdfromWord(word), wordObj[dictionaryDataKey]);
+                }else{
+                  showDictionaryData(word);
                 }
+
+                showTranslateFromEnglishToVn(word);
               });
             } else if(key == 'clear images'){
               StorageApi.setWordGoogleImages(word, null);
@@ -430,11 +434,11 @@ function makeSoundAndMeaning(id, dicData){
 
 function getDicDataFromWebContent(word, dicDataWebContent){
   var dicDataDom = $(dicDataWebContent);
-  var mp3 = dicDataDom.find('.headwordAudio audio:eq(0)').attr('src') || dicDataDom.find('a.speaker audio:eq(0)').attr('src');
-  var title = dicDataDom.find('[data-headword-id]:eq(0)').attr('data-headword-id').trim().replace(/\d+/i, '');
-  var phonetic = dicDataDom.find('.phoneticspelling:eq(0)').text() || $('.pron.alternative').text();
-  phonetic = phonetic.replace('Pronunciation:', title);
-  var meaning = dicDataDom.find('.semb .ind:eq(0)').text() + dicDataDom.find('.semb .ex:eq(0)').text();
+  var mp3 = dicDataDom.find('.headwordAudio audio:eq(0)').attr('src') || dicDataDom.find('a.speaker audio:eq(0)').attr('src') || '';
+  var title = dicDataDom.find('[data-headword-id]:eq(0)').attr('data-headword-id').trim().replace(/\d+/i, '') || '';
+  var phonetic = dicDataDom.find('.phoneticspelling:eq(0)').text() || $('.pron.alternative').text() || '';
+  phonetic = phonetic.replace('Pronunciation:', title) || '';
+  var meaning = dicDataDom.find('.semb .ind:eq(0)').text() + dicDataDom.find('.semb .ex:eq(0)').text() || '';
   var partOfSpeech = _.map(dicDataDom.find('.pos'), function(partOfSpeech){
     return $(partOfSpeech).text();
   });
@@ -465,6 +469,8 @@ function playAudio(audioSrc){
 }
 
 function addSoundOfWordToPlaylist(dicData){
+  if(!dicData.mp3) return;
+
   if($('ul.sm2-playlist-bd li[word="'+dicData.word+'"]').length == 0){
     var wordData = "<span class='correctedWord'>"+dicData.phonetic+"</span><span>" + dicData.partOfSpeech +"</span>"
           + "<span>"+dicData.meaning+"</span>";

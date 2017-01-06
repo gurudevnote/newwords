@@ -96,3 +96,9 @@ tr.currentplaying {
   padding-left: 5px;
   padding-right: 5px;
 }
+
+.word_hover{
+  font-weight: bold;
+  color: #00a290;
+  cursor: pointer;
+}

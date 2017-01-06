@@ -261,7 +261,7 @@ $(function(){
     var listBigImage = _.map(listImages, function (it) {
       return '<img src="' + it.realUrl + '" />';
     });
-    $('#google-images').html(listBigImage);
+    //$('#google-images').html(listBigImage);
 
     callback(_.sampleSize(listImagesContent, 4).join(' '));
   }

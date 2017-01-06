@@ -201,10 +201,13 @@ $(function(){
             viewCount = '<td id="viewCount_' + id + '">' + record.viewCount + '</td>';
           }
           var cambridgeWordLink = cambridgeDic + record.text;
+          var oxfordWordLink = dicUrl + record.text;
           var cambridgeLink = ' <a id="cambridge_'+id+'" target="_blank" word="'+record.text+'" href="'+cambridgeWordLink+'"><image class="cambridge_icon" src="images/cambridge.ico"></a>';
+          var oxfordLink = ' <a id="oxford_'+id+'" target="_blank" word="'+record.text+'" href="'+oxfordWordLink+'"><image class="oxford_icon" src="images/oxforddictionary.ico"></a>';
           var textWithLink = "<a google-image='' target='_blank' id='text_" + id
               + "' href='" + dicUrlResult + record.text +"'>" + record.text + "</a>"
               + '<span id="correctedWord_' + id + '"></span>'
+              + oxfordLink
               + cambridgeLink
               + ' <a href="' + googleImagesWeb + record.text + '" target="_blank"><image class="google_icon" src="images/googleg_lodp.ico"></a>'
               + ' <a href="https://translate.google.com/#en/vi/' + record.text + '" target="_blank"><image class="google_icon" src="images/google_translate.ico"></a>'
@@ -260,7 +263,7 @@ $(function(){
     });
     $('#google-images').html(listBigImage);
 
-    callback(listImagesContent.join(' '));
+    callback(_.sampleSize(listImagesContent, 4).join(' '));
   }
 
   $(document).tooltip({

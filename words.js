@@ -46,7 +46,7 @@ function stopAudios(){
 }
 $.ajaxSetup({ cache: true });
 function getWordIdfromWord(text) {
-  return text.replace(/\s+/g, '_');
+  return text.replace(/[\s;,.]+/g, '_');
 }
 function showDictionaryData(text, dictionary) {
   currentSelectedWord = text;

@@ -462,6 +462,9 @@ function getDicDataFromWebContent(word, dicDataWebContent){
 }
 
 function playAudio(audioSrc){
+  if(!audioSrc){
+    return;
+  }
   var audio = new Audio();
   audio.src = audioSrc;
   stopAudios();

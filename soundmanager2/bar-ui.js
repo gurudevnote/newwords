@@ -30,7 +30,7 @@
       var word = $('.sm2-playlist-bd li.selected').attr('word') || '';
       var id = 'text_' +word.trim().replace(/\s+/g, '_');
       $('#my-final-table tbody tr').removeClass('currentplaying');
-      $('a[id='+id+']').closest('tr').addClass('currentplaying');
+      $('#' + id).closest('tr').addClass('currentplaying');
     },
     /*
     finish: function(player) {

@@ -28,7 +28,14 @@
     
     play: function(player) {
       var word = $('.sm2-playlist-bd li.selected').attr('word') || '';
-      var id = 'text_' +word.trim().replace(/\s+/g, '_');
+      var id = 'text_' + getWordIdfromWord(word);
+      var currentUrl = window.location.href;
+      if(currentUrl.indexOf('#') >=0){
+        window.location.href = currentUrl.replace(/\#text\_[^\&\?\#]*/g, '#' + id);
+      }else{
+        window.location.href = currentUrl + '#' + id;
+      }
+
       $('#my-final-table tbody tr').removeClass('currentplaying');
       $('#' + id).closest('tr').addClass('currentplaying');
     },

@@ -56,7 +56,9 @@ function showDictionaryData(text, dictionary) {
     var computedDictionary = dictionary == undefined ? defaultDictionaryCountry : dictionary;
     var dictionaryDataKey = 'word' + computedDictionary + 'DictionaryData';
     if (wordObj && wordObj[dictionaryDataKey] && wordObj[dictionaryDataKey] != null) {
-      makeSoundAndMeaning(id, wordObj[dictionaryDataKey]);
+      showMeaning(id, wordObj[dictionaryDataKey]);
+      var audioSrc = wordObj[dictionaryDataKey] && wordObj[dictionaryDataKey].mp3;
+      playAudio(audioSrc);
     } else {
       var combineDicUrlResult = dictionary == undefined ? dicUrlResult : getDictionaryUrlByContry(computedDictionary);
       $.get(combineDicUrlResult + text, function (dicResult, textStatus, xhr) {
@@ -66,7 +68,9 @@ function showDictionaryData(text, dictionary) {
         } else {
           StorageApi.setWordUsDictionaryData(text, dicData);
         }
-        makeSoundAndMeaning(id, dicData);
+        showMeaning(id, dicData);
+        var audioSrc = dicData && dicData.mp3;
+        playAudio(audioSrc);
       });
     }
   });
@@ -390,7 +394,9 @@ $(function(){
                 var dictionaryDataKey = 'word' + defaultDictionaryCountry + 'DictionaryData';
                 if(wordObj && wordObj[dictionaryDataKey]){
                   addSoundOfWordToPlaylist(wordObj[dictionaryDataKey]);
-                  makeSoundAndMeaning(getWordIdfromWord(word), wordObj[dictionaryDataKey]);
+                  showMeaning(getWordIdfromWord(word), wordObj[dictionaryDataKey]);
+                  var audioSrc = wordObj[dictionaryDataKey] && wordObj[dictionaryDataKey].mp3;
+                  playAudio(audioSrc);
                 }else{
                   showDictionaryData(word);
                 }
@@ -416,7 +422,7 @@ $(function(){
 
 });
 
-function makeSoundAndMeaning(id, dicData){
+function showMeaning(id, dicData){
   $('#phonetic_'+id).text(dicData.phonetic);
   $('#wordType_'+id).text(dicData.partOfSpeech);
   $('#meaning_' + id).text(dicData.meaning);
@@ -430,7 +436,6 @@ function makeSoundAndMeaning(id, dicData){
     $('#correctedWord_' + id).text(' ' + dicData.correctedWord);
   }
   $('#cambridge_' + id).attr('href', cambridgeDic + dicData.correctedWord);
-  playAudio(dicData.mp3);
 }
 
 function getDicDataFromWebContent(word, dicDataWebContent){

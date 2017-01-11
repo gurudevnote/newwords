@@ -21,7 +21,7 @@ function listenToAllWordOfCurrentPage() {
             var dictionaryDataKey = 'word' + defaultDictionaryCountry + 'DictionaryData';
             if(wordObj && wordObj[dictionaryDataKey]){
                 addSoundOfWordToPlaylist(wordObj[dictionaryDataKey]);
-                makeSoundAndMeaning(getWordIdfromWord(word), wordObj[dictionaryDataKey]);
+                showMeaning(getWordIdfromWord(word), wordObj[dictionaryDataKey]);
             }else{
                 showDictionaryData(word);
             }

@@ -67,12 +67,7 @@ StorageApi.updateViewCountToLocalStorage = function(word){
 };
 
 StorageApi.setWordGoogleImages = function (word, googleImages) {
-	return fireBaseGetWordDictionary(word).then(function(snapshort){
-		var wordObj = snapshort.val() || {};
-		wordObj.googleImages = googleImages;
-		fireBaseGetWordDictionaryRef(word).set(wordObj);
-		return wordObj;
-	});
+	return fireBaseGetImageWordDictionaryRef(word).set(googleImages);
 };
 
 StorageApi.setWordDictionaryData = function (word, wordDictionaryData) {

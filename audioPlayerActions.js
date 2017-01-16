@@ -7,8 +7,13 @@ function clearPlayList(){
     $('ul.sm2-playlist-bd').html('');
 }
 
+function getAllWordsInCurrentPage() {
+    return $('[id^=text]').map(function () {
+        return $(this).text()
+    }).get();
+}
 function listenToAllWordOfCurrentPage() {
-    var listWords = $('[id^=text]').map(function(){return $(this).text()}).get();
+    var listWords = getAllWordsInCurrentPage();
     _.each(listWords, function (word) {
         if(!word){
             return;

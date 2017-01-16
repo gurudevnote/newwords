@@ -94,6 +94,25 @@ function showTranslateFromEnglishToVn(word) {
 function getGoogleImageWebOfWord(text) {
   return googleImagesWeb + text;
 }
+function getGoogleImagesFromWebContent(data) {
+  return $.map($(data).find('[data-src^=http]'), function (item) {
+    var linkData = $(item).parent().attr('href');
+    var result = {url: '', realUrl: '', refUrl: ''};
+    try {
+      result = {
+        url: $(item).attr('data-src'),
+        realUrl: decodeURIComponent(/\/imgres\?imgurl=([^&]+)/.exec(linkData)[1]),
+        refUrl: decodeURIComponent(/&imgrefurl=([^&]+)/.exec(linkData)[1])
+      };
+    } catch (e) {
+
+    } finally {
+
+    }
+
+    return result;
+  });
+}
 $(function(){
   $('button#showAddForm').click(function(){
     $(this).hide();
@@ -285,24 +304,7 @@ $(function(){
           else
           {
             $.get(getGoogleImageWebOfWord(text), function(data){
-              var listImages = $.map($(data).find('[data-src^=http]'),function(item){
-                var linkData = $(item).parent().attr('href');
-                var result = {url: '', realUrl: '', refUrl: ''};
-                try {
-                  result = {
-                    url: $(item).attr('data-src'),
-                    realUrl: decodeURIComponent(/\/imgres\?imgurl=([^&]+)/.exec(linkData)[1]),
-                    refUrl: decodeURIComponent(/&imgrefurl=([^&]+)/.exec(linkData)[1])
-                  };
-                } catch (e) {
-
-                } finally {
-
-                }
-
-                return result;
-              });
-
+              var listImages = getGoogleImagesFromWebContent(data);
               StorageApi.setWordGoogleImages(text, listImages);
               displayGoogleImages(listImages, callback);
             });

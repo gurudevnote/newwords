@@ -20,6 +20,14 @@ function fireBaseGetWordDictionary(word) {
     return firebase.database().ref('dictionary/' + word).once('value');
 }
 
+function fireBaseGetImageWordDictionary(word) {
+    return firebase.database().ref('dictionary/' + word + '/googleImages').once('value');
+}
+
+function fireBaseGetImageWordDictionaryRef(word) {
+    return firebase.database().ref('dictionary/' + word + '/googleImages');
+}
+
 function fireBaseGetWordDictionaryRef(word) {
     return firebase.database().ref('dictionary/' + word);
 }

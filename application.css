@@ -102,3 +102,12 @@ tr.currentplaying {
   color: #00a290;
   cursor: pointer;
 }
+
+#wordImage{
+  display: none;
+  position: fixed;
+  top: 100px;
+  left: 100px;
+  z-index: 99;
+  border: 1px solid black;
+}

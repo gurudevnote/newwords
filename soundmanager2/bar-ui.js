@@ -36,6 +36,17 @@
         window.location.href = currentUrl + '#' + id;
       }
 
+      fireBaseGetImageWordDictionary(word).then(function (snapshort) {
+        var googleImages = snapshort.val();
+        var imageObj = _.sampleSize(googleImages, 1);
+        if(imageObj && imageObj.length > 0 && imageObj[0].url){
+          $('#wordImage img').attr('src', imageObj[0].url);
+          $('#wordImage').show();
+        } else {
+          $('#wordImage').hide();
+        }
+      });
+
       $('#my-final-table tbody tr').removeClass('currentplaying');
       $('#' + id).closest('tr').addClass('currentplaying');
     },
@@ -44,17 +55,19 @@
       // each sound
       console.log('finish', player);
     },
-    pause: function(player) {
-      console.log('pause', player);
-    },
+
     error: function(player) {
       console.log('error', player);
     }
+    */
+    pause: function(player) {
+      $('#wordImage').hide();
+    },
     end: function(player) {
       // end of playlist
-      console.log('end', player);
+      $('#wordImage').hide();
     }
-    */
+
   };
 
   playerOptions = {

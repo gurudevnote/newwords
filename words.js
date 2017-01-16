@@ -76,13 +76,16 @@ function showDictionaryData(text, dictionary) {
   });
 }
 
+function googleTranslateUrl(word) {
+  return googleTranslateToVn + word;
+}
 function showTranslateFromEnglishToVn(word) {
   fireBaseGetWordDictionary(word).then(function(snapshort) {
     var wordObj = snapshort.val();
     if (wordObj && wordObj.translateFromEnglishToVn) {
       $('#translate_' + getWordIdfromWord(word)).text(wordObj.translateFromEnglishToVn);
     } else {
-      $.get(googleTranslateToVn + word, function (googleTranslateResult) {
+      $.get(googleTranslateUrl(word), function (googleTranslateResult) {
         var translateText = $(googleTranslateResult).find('#result_box').text();
         StorageApi.setTranslateFromEnglishToVn(word, translateText);
         $('#translate_' + getWordIdfromWord(word)).text(translateText);
@@ -412,12 +415,15 @@ $(function(){
               $.get(urlClear + encodeURIComponent(getDictionaryUrlByContry('Uk') + word));
               $.get(urlClear + encodeURIComponent(getDictionaryUrlByContry('Us') + word));
               StorageApi.clearWordDictionaryData(word);
+            } else if(key =='clear translate'){
+              $.get(urlClear + encodeURIComponent(googleTranslateUrl(word)));
             }
         },
         items: {
             "listen": {name: "Listen", icon: "listen"},
             "delete": {name: "Delete", icon: "delete"},
             "clear images": {name: "clear images", icon: "delete"},
+            "clear translate": {name: "clear translate", icon: "delete"},
             "clear dictionary data": {name: "clear dictionary data", icon: "delete"},
         }
     });
